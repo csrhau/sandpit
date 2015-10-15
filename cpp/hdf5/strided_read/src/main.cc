@@ -1,7 +1,9 @@
 #include <cstdlib> 
 #include <string> 
 #include <iostream>
+#include <stdexcept>
 #include <algorithm>
+#include <vector>
 
 #include "H5Cpp.h"
 
@@ -10,14 +12,13 @@ const std::string dataset_name("int_array");
 
 const int rank = 2;
 const int border_width = 1;
-const int inner_rows = 10;
-const int inner_cols = 10;
+const int inner_rows = 15;
+const int inner_cols = 11;
 const int outer_rows = border_width + inner_rows + border_width;
 const int outer_cols = border_width + inner_cols + border_width;
 
-
 // Note: inner means the core, unpadded data
-//      outer means inner surrounded by a border_width border
+//       outer means inner surrounded by a border_width border
 
 void gather_write() {
   // Allocate space to hold padded output data
@@ -50,22 +51,28 @@ void gather_write() {
 }
 
 void scatter_read() {
-  // Allocate space to hold padded input data
-  double outer_data[outer_rows][outer_cols];
+  H5::H5File file(file_name, H5F_ACC_RDWR);
+  H5::DataSet dataset = file.openDataSet(dataset_name);
+  H5::DataSpace filespace = dataset.getSpace();
+
+  hsize_t dims_in[rank];
+  if ( filespace.getSimpleExtentDims(dims_in) != rank) {
+    throw std::logic_error("Data size mismatch!");
+  };
+
+  std::vector<double> outer_data(dims_in[0] * dims_in[1]);
+
   // fill with known values - to validate
   std::cout << "Outer (padded) data before read:" << std::endl;
   for (int i = 0; i < outer_rows; ++i) {
     for (int j = 0; j < outer_cols; ++j) {
-      outer_data[i][j] = 9;
-      std::cout << outer_data[i][j] << ",";
+      outer_data[i * outer_cols + j] = 9;
+      std::cout << outer_data[i * outer_cols + j] << ",";
     }
     std::cout << std::endl;
   }
 
-  H5::H5File file(file_name, H5F_ACC_RDWR);
-  H5::DataSet dataset = file.openDataSet(dataset_name);
-  H5::DataSpace filespace = dataset.getSpace();
-  
+ 
   // Create a dataspace which maps onto the array
   hsize_t outer_dims[rank] = {outer_rows, outer_cols};
   H5::DataSpace memspace(rank, outer_dims);
@@ -78,12 +85,12 @@ void scatter_read() {
   memspace.selectHyperslab(H5S_SELECT_SET, count, offset, stride, block);
 
   // Read from the file to the inner hyperslab
-  dataset.read(outer_data, H5::PredType::NATIVE_DOUBLE, memspace, filespace); 
+  dataset.read(&outer_data[0], H5::PredType::NATIVE_DOUBLE, memspace, filespace); 
 
   std::cout << "Outer (padded) data after read:" << std::endl;
   for (int i = 0; i < outer_rows; ++i) {
     for (int j = 0; j < outer_cols; ++j) {
-      std::cout << outer_data[i][j] << ",";
+      std::cout << outer_data[i * outer_cols + j] << ",";
     }
     std::cout << std::endl;
   }
