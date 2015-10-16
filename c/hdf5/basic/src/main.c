@@ -7,7 +7,7 @@
 
 #define RANK 2
 const char* file_name = "data.h5";
-const char* dataset_name = "int_array";
+const char* dataset_name = "double_array";
 
 
 const int border_width = 1;
