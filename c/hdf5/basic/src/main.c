@@ -42,6 +42,7 @@ void write(void) {
                                  H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
   // Write the data to the dataset
   status = H5Dwrite(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, output_data);
+  status = H5Dclose(dataset_id);
   status = H5Fclose(file_id);
 }
 
@@ -52,15 +53,16 @@ void read(void) {
   file_id = H5Fopen(file_name, H5F_ACC_RDWR, H5P_DEFAULT);
   dataset_id = H5Dopen(file_id, dataset_name, H5P_DEFAULT);
   status = H5Dread(dataset_id, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, input_data);
-  status = H5Fclose(file_id);
-
-  printf("Input Deck:\n");
+    printf("Input Deck:\n");
   for (int i = 0; i < data_rows; ++i) {
     for (int j = 0; j < data_cols; ++j) {
       printf("%.0f,", input_data[i][j]);
     }
     printf("\n");
   }
+
+  status = H5Dclose(dataset_id);
+  status = H5Fclose(file_id);
 }
   
 int main(int argc, char *argv[]) {
