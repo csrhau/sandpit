@@ -7,7 +7,7 @@
 #include "H5Cpp.h"
 
 const std::string file_name("data.h5");
-const std::string dataset_name("int_array");
+const std::string dataset_name("double_array");
 
 const int rank = 2;
 const int border_width = 1;

@@ -8,12 +8,12 @@
 #include "H5Cpp.h"
 
 const std::string file_name("data.h5");
-const std::string dataset_name("int_array");
+const std::string dataset_name("double_array");
 
 const int rank = 2;
-const int border_width = 1;
 const int inner_rows = 15;
 const int inner_cols = 11;
+const int border_width = 1;
 const int outer_rows = border_width + inner_rows + border_width;
 const int outer_cols = border_width + inner_cols + border_width;
 
@@ -60,7 +60,8 @@ void scatter_read() {
     throw std::logic_error("Data size mismatch!");
   };
 
-  std::vector<double> outer_data(dims_in[0] * dims_in[1]);
+  // TODO - should use dims_in technically to not fix the size..
+  std::vector<double> outer_data(outer_rows * outer_cols);
 
   // fill with known values - to validate
   std::cout << "Outer (padded) data before read:" << std::endl;
@@ -72,7 +73,6 @@ void scatter_read() {
     std::cout << std::endl;
   }
 
- 
   // Create a dataspace which maps onto the array
   hsize_t outer_dims[rank] = {outer_rows, outer_cols};
   H5::DataSpace memspace(rank, outer_dims);
