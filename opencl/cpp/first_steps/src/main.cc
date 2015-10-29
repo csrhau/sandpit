@@ -19,22 +19,25 @@
 
 int main() {
   std::vector<cl::Platform> platforms;
-  std::vector<cl::Device> devices;
   cl::Platform::get(&platforms);
   if (platforms.size() == 0) {
     std::cerr << "No OpenCL platforms found. Check OpenCL Installation" << std::endl;
     return EXIT_FAILURE;
-  } else {
-    std::cout << "Platforms Available:\n";
-    for (const cl::Platform& platform: platforms) {
-      std::string platform_name();
-      std::vector<cl::Device> devices;
-      platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
-      std::cout << "  - " << platform.getInfo<CL_PLATFORM_NAME>() << ", Devices:\n" ;
-      for (const cl::Device& device : devices) {
-        std::cout << "    + " << device.getInfo<CL_DEVICE_NAME>() << "\n";
-      }
-    }
+  } 
+
+  // Just choose the first platform
+  cl::Platform& platform = platforms[0];
+  std::vector<cl::Device> devices;
+  platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
+  if (devices.size() == 0) {
+    std::cerr << "No devices found for OpenCL platform" 
+              << platform.getInfo<CL_PLATFORM_NAME>() << std::endl;
+    return EXIT_FAILURE;
   }
+
+  std::vector<cl::Device> active_devices{devices[0]};
+  cl::Context context(active_devices);
+  cl::Program::Sources sources;
+  
   return EXIT_SUCCESS;
 }
