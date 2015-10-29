@@ -49,7 +49,7 @@ endif
 endif
 endif
 
-$(PROJ): main.cc
+$(PROJ): main.cc sources.cc
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS) 
 .PHONY: clean
 

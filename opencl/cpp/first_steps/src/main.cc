@@ -1,6 +1,10 @@
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <vector>
+#include <utility>
+
 
 #ifdef __APPLE__
   #include <OpenCL/cl.hpp>
@@ -8,6 +12,7 @@
   #include <CL/cl.hpp>
 #endif
 
+#include "sources.h"
 
 // Six constructs: Platform
 //                 Device
@@ -37,7 +42,16 @@ int main() {
 
   std::vector<cl::Device> active_devices{devices[0]};
   cl::Context context(active_devices);
-  cl::Program::Sources sources;
+  std::string source = Tools::Sources::read_file("sum_kernel.cl");
+  cl::Program program(context, source);
   
+  if (program.build(active_devices) != CL_SUCCESS) {
+    std::cerr << "Error building program!\n";
+    for (const cl::Device& device : active_devices) {
+      std::cerr << device.getInfo<CL_DEVICE_NAME>() << " message :" 
+        << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device) << std::endl;
+    }
+  }
+
   return EXIT_SUCCESS;
 }
