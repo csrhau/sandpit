@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 
+#include "sources.h"
+
 #define GETOPTS "i:o:"
 static char *progname;
 static struct option long_opts[] = {
@@ -40,11 +42,10 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  std::ifstream istream (infile);
-  if (!istream.is_open()) {
-    std::cerr << "Unable to open input file " << infile << "!\n";
-    print_usage();
-    return EXIT_FAILURE; 
+  std::string text = Tools::Sources::read_file(infile);
+  if (text.empty()) {
+    std::cerr << "Empty input file!" << std::endl;
+    return EXIT_FAILURE;
   }
 
   std::ofstream ostream (outfile);
@@ -54,8 +55,8 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE; 
   }
 
-  std::string line;
-  while (getline(istream, line)) {
-    ostream << line << "\n";
-  }
+
+
+  ostream << text;
+  ostream.flush();
 }
