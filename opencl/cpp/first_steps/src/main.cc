@@ -8,7 +8,5 @@ int main() {
     std::cout << i << ", ";
   }
   std::cout << std::endl;
-
   return EXIT_SUCCESS;
-
 }
