@@ -15,7 +15,7 @@ static struct option long_opts[] = {
   {NULL, 0, NULL, 0}
 };
 
-void print_usage(void) {
+void print_usage() {
   fprintf(stderr, "%s: A simple 2D simulation of the diffusion equation.\n", progname);
   fprintf(stderr, "Usage: %s [OPTIONS]\n", progname);
   fprintf(stderr, "  -i,  --infile            Path to input file       [required]\n"
