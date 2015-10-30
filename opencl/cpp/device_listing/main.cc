@@ -3,7 +3,7 @@
 #include <vector>
 
 #ifdef __APPLE__
-  #include <OpenCL/cl.hpp>
+  #include "cl.hpp"
 #else
   #include <CL/cl.hpp>
 #endif
@@ -27,7 +27,6 @@ int main() {
   } else {
     std::cout << "Platforms Available:\n";
     for (const cl::Platform& platform: platforms) {
-      std::string platform_name();
       std::vector<cl::Device> devices;
       platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
       std::cout << "  - " << platform.getInfo<CL_PLATFORM_NAME>() << ", Devices:\n" ;
