@@ -6,7 +6,7 @@
 #ifdef __APPLE__
 #include "cl.hpp"
 #else
-#include <CL/cl.h>
+#include <CL/cl.hpp>
 #endif
 
 #include "vecadd_config.h"
@@ -45,6 +45,8 @@ int main(int argc, char *argv[]) {
     // Copy the input data to the input buffers
     queue.enqueueWriteBuffer(bufferA, CL_TRUE, 0, datasize, A.data());
     queue.enqueueWriteBuffer(bufferB, CL_TRUE, 0, datasize, B.data());
+
+    // Read the program source
 
   } catch (cl::Error& error) {
     std::cerr << error.what() << "(" << error.err() << ")" << std::endl;
