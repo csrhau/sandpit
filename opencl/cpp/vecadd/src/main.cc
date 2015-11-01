@@ -46,7 +46,10 @@ int main(int argc, char *argv[]) {
     queue.enqueueWriteBuffer(bufferA, CL_TRUE, 0, datasize, A.data());
     queue.enqueueWriteBuffer(bufferB, CL_TRUE, 0, datasize, B.data());
 
-    // Read the program source
+    // Read the program source for the sum kernel
+    // std::string source = Tools::Sources::read_file("
+
+
 
   } catch (cl::Error& error) {
     std::cerr << error.what() << "(" << error.err() << ")" << std::endl;

@@ -4,11 +4,14 @@ project (vecadd)
 set (VECADD_VERSION_MAJOR 1)
 set (VECADD_VERSION_MINOR 0)
 
+# Include kernels directory
+add_subdirectory(kernels)
 # Auto-configure #define vars
 configure_file (
   "${PROJECT_SOURCE_DIR}/vecadd_config.h.in"
   "${PROJECT_BINARY_DIR}/vecadd_config.h"
 )
+# Copy across the kernel files
 include_directories("${PROJECT_BINARY_DIR}")
 
 set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}") 
