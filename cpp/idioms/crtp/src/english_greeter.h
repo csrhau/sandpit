@@ -3,7 +3,7 @@
 
 #include "greeter.h"
 
-struct EnglishGreeter : Greeter<EnglishGreeter> {
+struct EnglishGreeter : public Greeter<EnglishGreeter> {
   void implementation();
 };
 

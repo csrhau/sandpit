@@ -3,7 +3,7 @@
 
 #include "greeter.h"
 
-struct FrenchGreeter : Greeter<FrenchGreeter> {
+struct FrenchGreeter : public Greeter<FrenchGreeter> {
   void implementation();
   void punctuation(); //overrides base template
 };
