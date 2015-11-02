@@ -9,6 +9,8 @@
 #include <CL/cl.hpp>
 #endif
 
+#include "sources.h"
+#include "fpcompare.h"
 #include "vecadd_config.h"
 
 int main(int argc, char *argv[]) {
@@ -35,6 +37,7 @@ int main(int argc, char *argv[]) {
     platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
     cl::Device& device = devices.front();
     cl::Context context(devices);
+    std::cout << "Performing task on device: " << device.getInfo<CL_DEVICE_NAME>() << std::endl; 
     cl::CommandQueue queue(context, device);
 
     // Create Memory Buffers
@@ -46,12 +49,48 @@ int main(int argc, char *argv[]) {
     queue.enqueueWriteBuffer(bufferA, CL_TRUE, 0, datasize, A.data());
     queue.enqueueWriteBuffer(bufferB, CL_TRUE, 0, datasize, B.data());
 
-    // Read the program source for the sum kernel
-    // std::string source = Tools::Sources::read_file("
+    std::string source = Tools::Sources::read_file("vecadd.cl");
+    cl::Program program(context, source);
+    program.build(devices);
+
+    // Extract the kernels and specify arguments
+    cl::Kernel vecadd_kernel(program, "vecadd");
+    { // Specify kernel arguments
+      int arg = 0;
+      vecadd_kernel.setArg(arg++, bufferA);
+      vecadd_kernel.setArg(arg++, bufferB);
+      vecadd_kernel.setArg(arg++, bufferC);
+    }
+
+    // Execute the kernel
+    cl::NDRange global(elements);
+    cl::NDRange local(256);
+
+    queue.enqueueNDRangeKernel(vecadd_kernel, cl::NullRange, global, local);
+
+    // Copy the output data back to the host
+    queue.enqueueReadBuffer(bufferC, CL_TRUE, 0, datasize, C.data());
+
+    int errors = 0;
+    for (int i = 0; i < elements; ++i) {
+      if (Tools::DoubleCompare::not_equal(A[i] + B[i], C[i])) {
+        std::cerr << "Data mismatch at index " << i << ", expected: " 
+                  << A[i] + B[i] << ", got: " << C[i] << std::endl;
+        ++errors;
+      }
+    }
+    if (errors) {
+      std::cerr << "Data mismatches detected in " << errors << " out of "
+                << elements << " possible cases! " << std::endl;
+    } else {
+      std::cout << "Success!" << std::endl;
+    }
+
 
 
 
   } catch (cl::Error& error) {
+    std::cerr << "Error in OpenCL Execution" << std::endl;
     std::cerr << error.what() << "(" << error.err() << ")" << std::endl;
     return EXIT_FAILURE; 
   }
