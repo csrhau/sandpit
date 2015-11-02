@@ -51,8 +51,17 @@ int main(int argc, char *argv[]) {
 
     std::string source = Tools::Sources::read_file("vecadd.cl");
     cl::Program program(context, source);
-    program.build(devices);
-
+    try {
+      program.build(devices);
+    } catch (cl::Error& error) {
+      if (error.err() == CL_BUILD_PROGRAM_FAILURE) { 
+        std::cout << "Build Status: " << program.getBuildInfo<CL_PROGRAM_BUILD_STATUS>(device)
+                  << "\nBuild Options: " << program.getBuildInfo<CL_PROGRAM_BUILD_OPTIONS>(device)
+                  << "\nBuild Log:\n" << program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(device)
+                  << "\n---End---" << std::endl;
+      }
+      throw;
+    }
     // Extract the kernels and specify arguments
     cl::Kernel vecadd_kernel(program, "vecadd");
     { // Specify kernel arguments
@@ -85,13 +94,9 @@ int main(int argc, char *argv[]) {
     } else {
       std::cout << "Success!" << std::endl;
     }
-
-
-
-
   } catch (cl::Error& error) {
-    std::cerr << "Error in OpenCL Execution" << std::endl;
-    std::cerr << error.what() << "(" << error.err() << ")" << std::endl;
+    std::cerr << "Error in OpenCL Execution:" << error.what() 
+              << "(" << error.err() << ")" << std::endl;
     return EXIT_FAILURE; 
   }
   return EXIT_SUCCESS;
