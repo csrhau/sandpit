@@ -17,7 +17,7 @@ Accumulator::Accumulator(const std::vector<float>& data_) : _data(data_) {
   _platform.getDevices(CL_DEVICE_TYPE_GPU, &_devices);
   _device = _devices.front();
   _context = cl::Context(_devices);; 
-  _queue = cl::CommandQueue(_context, _device);
+  _queue = cl::CommandQueue(_context, _device, CL_QUEUE_PROFILING_ENABLE);
   std::string source = Tools::Sources::read_file("vecsum.cl");
   _program = Tools::Sources::build_program(source, _context, _devices);
   _sum_kernel = cl::Kernel(_program, "vecsum");
@@ -53,9 +53,15 @@ float Accumulator::sum() {
   _sum_kernel.setArg(2, sizeof(cl_float) * local[0], NULL);
   _sum_kernel.setArg(3, elements);
   
-  _queue.enqueueNDRangeKernel(_sum_kernel, cl::NullRange, global, local);
+  cl::Event event;
+  _queue.enqueueNDRangeKernel(_sum_kernel, cl::NullRange, global, local, NULL, &event);
 
   std::vector<float> receiver(out_els);
   _queue.enqueueReadBuffer(output, CL_TRUE, 0, outsize, receiver.data());
+ 
+  double duration_ns = event.getProfilingInfo<CL_PROFILING_COMMAND_END>() 
+                     - event.getProfilingInfo<CL_PROFILING_COMMAND_START>();
+
+  std::cout << "vecsum kernel completed in " << duration_ns / 1e6 << "ms" << std::endl;
   return std::accumulate(receiver.begin(), receiver.end(), 0.0);
 }
