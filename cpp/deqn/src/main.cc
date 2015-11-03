@@ -1,6 +1,7 @@
 #include <getopt.h>
 #include <cstdlib>
 #include <iostream>
+#include <chrono>
 
 #include "input_file.h"
 #include "simulation.h"
@@ -23,6 +24,7 @@ void print_usage() {
                   "  -r,  --output-rate       Timesteps between output [optional]\n"
                   "  -t,  --timesteps         Simulation Timesteps     [optional]\n");
 }
+
 
 int main(int argc, char *argv[]) {
   using namespace std::chrono;
@@ -60,6 +62,8 @@ int main(int argc, char *argv[]) {
   }
 
   InputFile input_file(infile);
+
+  std::chrono::steady_clock::time_point t_start = std::chrono::steady_clock::now();
   Simulation sim(input_file.get_rows(), input_file.get_cols());
   sim.setup(input_file);
   for (int ts = 0; ts < timesteps; ++ts) {
@@ -67,6 +71,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Timestep " << ts << " temperature: " << sim.temperature() 
               << std::endl;
   }
+  std::chrono::steady_clock::time_point t_end = std::chrono::steady_clock::now();
+  std::chrono::duration<double> runtime = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start);
+  std::cout << "App Runtime: " << runtime.count() << " seconds." << std::endl;
 
   return EXIT_SUCCESS;
 }
