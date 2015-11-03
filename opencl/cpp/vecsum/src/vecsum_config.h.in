@@ -1,0 +1,8 @@
+#ifndef VECSUM_CONFIG_H
+#define VECSUM_CONFIG_H
+// Configuration File.
+
+#define VECSUM_VERSION_MAJOR @VECSUM_VERSION_MAJOR@
+#define VECSUM_VERSION_MINOR @VECSUM_VERSION_MINOR@
+
+#endif
