@@ -19,7 +19,8 @@ Accumulator::Accumulator(const std::vector<float>& data_) : _data(data_) {
   _context = cl::Context(_devices);; 
   _queue = cl::CommandQueue(_context, _device, CL_QUEUE_PROFILING_ENABLE);
   std::string source = Tools::Sources::read_file("vecsum.cl");
-  _program = Tools::Sources::build_program(source, _context, _devices);
+  _options.append("-DASDF_ASDF");
+  _program = Tools::Sources::build_program(source, _context, _devices, _options);
   _sum_kernel = cl::Kernel(_program, "vecsum");
 }
 

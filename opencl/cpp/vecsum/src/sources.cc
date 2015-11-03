@@ -25,10 +25,11 @@ namespace Tools {
 
     cl::Program build_program(const std::string& source_,
                               const cl::Context& context_,
-                              const std::vector<cl::Device>& devices_) {
+                              const std::vector<cl::Device>& devices_,
+                              const std::string& options_) {
       cl::Program program = cl::Program(context_, source_);
       try {
-        program.build(devices_);
+        program.build(devices_, options_.c_str());
       } catch (cl::Error& error) {
         if (error.err() == CL_BUILD_PROGRAM_FAILURE) { 
           for (const cl::Device& device : devices_) {

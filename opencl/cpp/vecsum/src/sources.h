@@ -17,7 +17,8 @@ namespace Tools {
 
     cl::Program build_program(const std::string& source_, 
                               const cl::Context& context_,
-                              const std::vector<cl::Device>& device_);
+                              const std::vector<cl::Device>& device_,
+                              const std::string& options_);
   } // namespace Sources
 } // namespace Tools
 

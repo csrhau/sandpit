@@ -9,6 +9,7 @@ class Accumulator {
   private:
     const std::vector<float>& _data;
     std::vector<cl::Device> _devices;
+    std::string _options;
     cl::Device _device;
     cl::Platform _platform;
     cl::Context _context;

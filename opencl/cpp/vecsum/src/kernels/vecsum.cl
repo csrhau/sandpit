@@ -1,6 +1,6 @@
 // Executes a vector addition of A and B, storing the result in C.
 
-#if defined ADSF_ADSF 
+#if defined EXPERIMENT_ONE
 
 #else
 __kernel
