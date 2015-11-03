@@ -10,11 +10,11 @@
 
 int main(int argc, char *argv[]) {
 
-  const int elements = 2048; // You will get errors much higher than this, because floats can't precisely hold ints over 2^24 + 1
+  const int elements = 2048 << 8; // You will get errors much higher than this, because floats can't precisely hold ints over 2^24 + 1
   std::cout << elements << std::endl;
   std::vector<float> A(elements);
   for (int i = 0; i < elements; ++i) {
-    A[i] = i;
+    A[i] = 16 - i % 32;
   }
 
   Accumulator acc(A);
