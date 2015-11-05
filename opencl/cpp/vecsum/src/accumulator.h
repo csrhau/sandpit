@@ -19,6 +19,10 @@ class Accumulator {
 
   public:
     Accumulator(const std::vector<float>& data_);
+    ~Accumulator() = default;
+    Accumulator(Accumulator const&) = delete;
+    Accumulator& operator=(Accumulator const&) = delete;
+
     float sum();
 };
 
