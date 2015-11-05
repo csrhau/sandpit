@@ -8,6 +8,7 @@
 class Accumulator {
   private:
     const std::vector<float>& _data;
+    cl::Buffer _device_data;
     std::vector<cl::Device> _devices;
     std::string _options;
     cl::Device _device;
@@ -22,8 +23,8 @@ class Accumulator {
     ~Accumulator() = default;
     Accumulator(Accumulator const&) = delete;
     Accumulator& operator=(Accumulator const&) = delete;
-
     float sum();
+
 };
 
 #endif

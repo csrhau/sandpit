@@ -9,8 +9,85 @@
 #include "OpenCL.h"
 #include "sources.h"
 
-#define INBUILD 0
 #define NVIDIA 1
+
+
+namespace Kernels {
+
+  float vecsum_loadadd(cl::Buffer& input_,
+                       cl::CommandQueue& queue_,
+                       cl::Program& program_,
+                       cl::Context& _context,
+                       size_t elements_,
+                       size_t block_size_) {
+    size_t global_size = elements_ / 2;;
+    size_t remainder = global_size % block_size_;
+    if (remainder != 0) {
+      global_size += block_size_ - remainder;
+    }
+    cl::NDRange global(global_size);
+    cl::NDRange local(block_size_);
+    size_t out_els = static_cast<size_t>(
+      ceil(static_cast<double>(elements_) / static_cast<double>(local[0]))
+     );
+    size_t outsize = out_els * sizeof(cl_float);
+
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
+    cl::Kernel kernel = cl::Kernel(program_, "vecsum_loadadd");
+    kernel.setArg(0, input_);
+    kernel.setArg(1, output);
+    kernel.setArg(2, sizeof(cl_float) * local[0], NULL);
+    kernel.setArg(3, elements_);
+    queue_.enqueueNDRangeKernel(kernel, cl::NullRange, global, local);
+    std::vector<float> receiver(out_els);
+    queue_.enqueueReadBuffer(output, CL_TRUE, 0, outsize, receiver.data());
+    return std::accumulate(receiver.begin(), receiver.end(), 0.0);
+  }
+
+
+  float __vecsum_simple_impl(cl::Buffer& input_,
+                             cl::CommandQueue& queue_,
+                             cl::Program& program_,
+                             cl::Context& context_,
+                             size_t elements_,
+                             size_t block_size_,
+                             const char* kernel_name_) {
+    size_t global_size = elements_;
+    size_t remainder = global_size % block_size_;
+    if (remainder != 0) {
+      global_size += block_size_ - remainder;
+    }
+    cl::NDRange global(global_size);
+    cl::NDRange local(block_size_);
+    size_t out_els = static_cast<size_t>(
+      ceil(static_cast<double>(elements_) / static_cast<double>(local[0]))
+     );
+    size_t outsize = out_els * sizeof(cl_float);
+
+    cl::Buffer output = cl::Buffer(context_, CL_MEM_READ_ONLY, outsize);
+    cl::Kernel kernel = cl::Kernel(program_, kernel_name_);
+    kernel.setArg(0, input_);
+    kernel.setArg(1, output);
+    kernel.setArg(2, sizeof(cl_float) * local[0], NULL);
+    kernel.setArg(3, elements_);
+    queue_.enqueueNDRangeKernel(kernel, cl::NullRange, global, local);
+    std::vector<float> receiver(out_els);
+    queue_.enqueueReadBuffer(output, CL_TRUE, 0, outsize, receiver.data());
+    return std::accumulate(receiver.begin(), receiver.end(), 0.0);
+  }
+
+
+  float vecsum_contiguous(cl::Buffer& input_,
+                          cl::CommandQueue& queue_,
+                          cl::Program& program_,
+                          cl::Context& context_,
+                          size_t elements_,
+                          size_t block_size_) {
+    return __vecsum_simple_impl(input_, queue_, program_, context_, elements_, block_size_, "vecsum_contiguous");
+  }
+
+} // Namespace Kernels
+
 
 Accumulator::Accumulator(const std::vector<float>& data_) : _data(data_) {
   std::vector<cl::Platform> platforms;
@@ -25,7 +102,6 @@ Accumulator::Accumulator(const std::vector<float>& data_) : _data(data_) {
   std::string source = Tools::Sources::read_file("vecsum.cl");
   _options.append("-DEXPERIMENT_ONE"); // Just an example
   _program = Tools::Sources::build_program(source, _context, _devices, _options);
-  _sum_kernel = cl::Kernel(_program, "vecsum_contiguous");
 }
 
 float Accumulator::sum() {
@@ -33,44 +109,8 @@ float Accumulator::sum() {
   // Copy data from the card
   const int elements = _data.size();
   const int datasize = elements * sizeof(float);
-
-  size_t local_size = 128;
-  size_t global_size = _data.size();
-  size_t remainder = global_size % local_size;
-  if (remainder != 0) {
-    global_size += local_size - remainder;
-  }
-
-  cl::NDRange local(local_size);
-  cl::NDRange global(global_size);
-
-  size_t out_els = static_cast<size_t>(
-    ceil(static_cast<double>(_data.size()) / static_cast<double>(local[0]))
-   );
-  size_t outsize = out_els * sizeof(cl_float);
-
   cl::Buffer input  = cl::Buffer(_context, CL_MEM_READ_ONLY, datasize);
-  cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
-  _queue.enqueueWriteBuffer(input, CL_FALSE, 0, datasize, _data.data());
+  _queue.enqueueWriteBuffer(input, CL_TRUE, 0, datasize, _data.data());
+  return Kernels::vecsum_loadadd(input, _queue, _program, _context, elements, 128); 
 
-  _sum_kernel.setArg(0, input);
-  _sum_kernel.setArg(1, output);
-  _sum_kernel.setArg(2, sizeof(cl_float) * local[0], NULL);
-  _sum_kernel.setArg(3, elements);
-
-  double duration_ns = 0;
-
-  for(int i = 0; i < 1000; ++i) {
-    cl::Event event;
-    _queue.enqueueNDRangeKernel(_sum_kernel, cl::NullRange, global, local, NULL, &event);
-    event.wait();
-    duration_ns += event.getProfilingInfo<CL_PROFILING_COMMAND_END>() 
-                - event.getProfilingInfo<CL_PROFILING_COMMAND_START>();
-  }
-   std::vector<float> receiver(out_els);
-  _queue.enqueueReadBuffer(output, CL_TRUE, 0, outsize, receiver.data());
- 
-
-  std::cout << "vecsum kernel completed in " << duration_ns / 1e6 << "ms" << std::endl;
-  return std::accumulate(receiver.begin(), receiver.end(), 0.0);
 }
