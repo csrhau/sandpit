@@ -14,6 +14,33 @@
 
 namespace Kernels {
 
+
+  // Todo: tune block size, number of blocks 
+  float vecsum_accadd(cl::Buffer& input_,
+                      cl::CommandQueue& queue_,
+                      cl::Program& program_,
+                      cl::Context& _context,
+                      size_t elements_,
+                      size_t block_size_) {
+
+    cl::NDRange global(elements_ / 128);
+    cl::NDRange local(block_size_);
+    size_t out_els = static_cast<size_t>(
+      ceil(static_cast<double>(elements_) / static_cast<double>(local[0]))
+     );
+    size_t outsize = out_els * sizeof(cl_float);
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
+    cl::Kernel kernel = cl::Kernel(program_, "vecsum_accadd");
+    kernel.setArg(0, input_);
+    kernel.setArg(1, output);
+    kernel.setArg(2, sizeof(cl_float) * local[0], NULL);
+    kernel.setArg(3, elements_);
+    queue_.enqueueNDRangeKernel(kernel, cl::NullRange, global, local);
+    std::vector<float> receiver(global[0]);
+    queue_.enqueueReadBuffer(output, CL_TRUE, 0, outsize, receiver.data());
+    return std::accumulate(receiver.begin(), receiver.end(), 0.0);
+  }
+
   float vecsum_loadadd(cl::Buffer& input_,
                        cl::CommandQueue& queue_,
                        cl::Program& program_,
@@ -111,6 +138,5 @@ float Accumulator::sum() {
   const int datasize = elements * sizeof(float);
   cl::Buffer input  = cl::Buffer(_context, CL_MEM_READ_ONLY, datasize);
   _queue.enqueueWriteBuffer(input, CL_TRUE, 0, datasize, _data.data());
-  return Kernels::vecsum_loadadd(input, _queue, _program, _context, elements, 128); 
-
+  return Kernels::vecsum_accadd(input, _queue, _program, _context, elements, 128); 
 }
