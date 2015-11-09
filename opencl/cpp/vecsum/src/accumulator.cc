@@ -10,7 +10,7 @@
 #include "OpenCL.h"
 #include "sources.h"
 
-#define NVIDIA 1
+#define NVIDIA 2
 
 namespace Kernels {
 
@@ -120,7 +120,7 @@ Accumulator::Accumulator(const std::vector<float>& data_) : _data(data_) {
   cl::Platform::get(&platforms);
   _platform = platforms.front();
 
-  _platform.getDevices(CL_DEVICE_TYPE_GPU, &_devices);
+  _platform.getDevices(CL_DEVICE_TYPE_ALL, &_devices);
   _device = _devices[NVIDIA];
   std::cout << "Device:" <<  _device.getInfo<CL_DEVICE_NAME>() << std::endl;  
   _context = cl::Context(_devices);; 

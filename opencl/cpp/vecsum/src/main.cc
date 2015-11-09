@@ -22,7 +22,6 @@ int main(int argc, char *argv[]) {
   Accumulator acc(A);
   float expected, observed;
   expected = std::accumulate(A.begin(), A.end(), 0.f);
-  std::cout << "Expected: " << expected << std::endl;
   observed = acc.sum();
   if (Tools::FloatCompare::not_equal(expected, observed)) {
     std::cerr << "Mismatch detected between expected: " << static_cast<long>(expected) 
