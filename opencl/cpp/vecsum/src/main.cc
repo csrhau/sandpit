@@ -10,16 +10,19 @@
 
 int main(int argc, char *argv[]) {
 
-  const int elements = 2048 << 8; // You will get errors much higher than this, because floats can't precisely hold ints over 2^24 + 1
+  const int elements = 2048 << 10; // You will get errors much higher than this, because floats can't precisely hold ints over 2^24 + 1
   std::cout << elements << std::endl;
   std::vector<float> A(elements);
+  float initial = 0.f;
   for (int i = 0; i < elements; ++i) {
-    A[i] = 16 - i % 32;
+    A[i] = 16 - (i % 33);
+    initial += A[i];
   }
 
   Accumulator acc(A);
   float expected, observed;
   expected = std::accumulate(A.begin(), A.end(), 0.f);
+  std::cout << "Expected: " << expected << std::endl;
   observed = acc.sum();
   if (Tools::FloatCompare::not_equal(expected, observed)) {
     std::cerr << "Mismatch detected between expected: " << static_cast<long>(expected) 

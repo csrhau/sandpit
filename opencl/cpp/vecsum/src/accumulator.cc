@@ -4,6 +4,7 @@
 #include <vector> 
 #include <numeric>
 #include <string>
+#include <chrono>
 #include <cmath>
 
 #include "OpenCL.h"
@@ -11,9 +12,7 @@
 
 #define NVIDIA 1
 
-
 namespace Kernels {
-
 
   // Todo: tune block size, number of blocks 
   float vecsum_accadd(cl::Buffer& input_,
@@ -23,10 +22,11 @@ namespace Kernels {
                       size_t elements_,
                       size_t block_size_) {
 
-    cl::NDRange global(elements_ / 128);
+    // Why does this claim an incorrect checksum if set to 256?
+    cl::NDRange global(elements_ / 512);
     cl::NDRange local(block_size_);
     size_t out_els = static_cast<size_t>(
-      ceil(static_cast<double>(elements_) / static_cast<double>(local[0]))
+      ceil(static_cast<double>(global[0]) / static_cast<double>(local[0]))
      );
     size_t outsize = out_els * sizeof(cl_float);
     cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
@@ -55,7 +55,7 @@ namespace Kernels {
     cl::NDRange global(global_size);
     cl::NDRange local(block_size_);
     size_t out_els = static_cast<size_t>(
-      ceil(static_cast<double>(elements_) / static_cast<double>(local[0]))
+      ceil(static_cast<double>(global[0]) / static_cast<double>(local[0]))
      );
     size_t outsize = out_els * sizeof(cl_float);
 
@@ -103,7 +103,6 @@ namespace Kernels {
     return std::accumulate(receiver.begin(), receiver.end(), 0.0);
   }
 
-
   float vecsum_contiguous(cl::Buffer& input_,
                           cl::CommandQueue& queue_,
                           cl::Program& program_,
@@ -138,5 +137,16 @@ float Accumulator::sum() {
   const int datasize = elements * sizeof(float);
   cl::Buffer input  = cl::Buffer(_context, CL_MEM_READ_ONLY, datasize);
   _queue.enqueueWriteBuffer(input, CL_TRUE, 0, datasize, _data.data());
-  return Kernels::vecsum_accadd(input, _queue, _program, _context, elements, 128); 
+
+  // Timing loop
+  float value = 0;
+  std::chrono::steady_clock::time_point t_start = std::chrono::steady_clock::now();
+  for (int i = 0; i < 100; ++i) {
+    value += Kernels::vecsum_accadd(input, _queue, _program, _context, elements, 256); 
+  }
+  std::chrono::steady_clock::time_point t_end = std::chrono::steady_clock::now();
+  std::chrono::duration<double> runtime = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start);
+  std::cout << "Runtime: " << runtime.count() << " secs. Rand no: " <<  value << std::endl;
+
+  return Kernels::vecsum_accadd(input, _queue, _program, _context, elements, 32); 
 }
