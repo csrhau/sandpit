@@ -1,4 +1,3 @@
-#include <getopt.h>
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
