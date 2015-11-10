@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[]) {
 
-  const int elements = 2048 << 10; // You will get errors much higher than this, because floats can't precisely hold ints over 2^24 + 1
+  const int elements = 2048 << 14; // You will get errors much higher than this, because floats can't precisely hold ints over 2^24 + 1
   std::cout << elements << std::endl;
   std::vector<float> A(elements);
   float initial = 0.f;
