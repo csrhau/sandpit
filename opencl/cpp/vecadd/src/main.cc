@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
       throw;
     }
     // Extract the kernels and specify arguments
-    cl::Kernel vecadd_kernel(program, "vecadd");
+    cl::Kernel vecadd_kernel(program, "vecadd4");
     { // Specify kernel arguments
       int arg = 0;
       vecadd_kernel.setArg(arg++, bufferA);
