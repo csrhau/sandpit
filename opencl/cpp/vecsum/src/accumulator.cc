@@ -30,7 +30,7 @@ namespace Kernels {
       ceil(static_cast<double>(global[0]) / static_cast<double>(local[0]))
      );
     size_t outsize = out_els * sizeof(cl_float);
-    cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_WRITE_ONLY, outsize);
     cl::Kernel kernel = cl::Kernel(program_, "vecsum_vecvecadd");
     kernel.setArg(0, input_);
     kernel.setArg(1, output);
@@ -59,7 +59,7 @@ namespace Kernels {
       ceil(static_cast<double>(global[0]) / static_cast<double>(local[0]))
      );
     size_t outsize = out_els * sizeof(cl_float);
-    cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_WRITE_ONLY, outsize);
     cl::Kernel kernel = cl::Kernel(program_, "vecsum_vecadd");
     kernel.setArg(0, input_);
     kernel.setArg(1, output);
@@ -86,8 +86,7 @@ namespace Kernels {
       ceil(static_cast<double>(global[0]) / static_cast<double>(local[0]))
      );
     size_t outsize = out_els * sizeof(cl_float);
-    cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
-    cl::Kernel kernel = cl::Kernel(program_, "vecsum_accadd");
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_WRITE_ONLY, outsize); cl::Kernel kernel = cl::Kernel(program_, "vecsum_accadd");
     kernel.setArg(0, input_);
     kernel.setArg(1, output);
     kernel.setArg(2, sizeof(cl_float) * local[0], NULL);
@@ -116,7 +115,7 @@ namespace Kernels {
      );
     size_t outsize = out_els * sizeof(cl_float);
 
-    cl::Buffer output = cl::Buffer(_context, CL_MEM_READ_ONLY, outsize);
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_WRITE_ONLY, outsize);
     cl::Kernel kernel = cl::Kernel(program_, "vecsum_loadadd");
     kernel.setArg(0, input_);
     kernel.setArg(1, output);
@@ -148,7 +147,7 @@ namespace Kernels {
      );
     size_t outsize = out_els * sizeof(cl_float);
 
-    cl::Buffer output = cl::Buffer(context_, CL_MEM_READ_ONLY, outsize);
+    cl::Buffer output = cl::Buffer(context_, CL_MEM_WRITE_ONLY, outsize);
     cl::Kernel kernel = cl::Kernel(program_, kernel_name_);
     kernel.setArg(0, input_);
     kernel.setArg(1, output);
