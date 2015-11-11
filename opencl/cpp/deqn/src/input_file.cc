@@ -9,7 +9,7 @@
 
 InputFile::InputFile(std::string filename_) : _filename(filename_) {
   if ((_file_id = H5Fopen(_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT)) < 0) {
-    throw std::invalid_argument(std::string("invalid filename") + filename_);
+    throw std::invalid_argument(std::string("Unable to open file ") + filename_);
   }
   if (H5LTget_dataset_info(_file_id, DEQN_DATASET, _dims, NULL, NULL) < 0) {
     H5Fclose(_file_id);

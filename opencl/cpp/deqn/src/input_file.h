@@ -18,8 +18,9 @@ class InputFile {
     double _sigma;
 
   public:
-    InputFile(std::string prefix_);
+    InputFile(std::string filename_);
     ~InputFile();
+
     int get_rows() const;
     int get_cols() const;
     double get_width() const;
