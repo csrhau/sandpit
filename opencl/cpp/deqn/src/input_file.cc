@@ -58,3 +58,10 @@ void InputFile::populate_data(double *data) const {
     throw std::logic_error("unable to read dataset");
   }
 }
+
+void InputFile::populate_data(float *data) const {
+  if (H5LTread_dataset_float(_file_id, DEQN_DATASET, data) < 0) {
+    H5Fclose(_file_id);
+    throw std::logic_error("unable to read dataset");
+  }
+}

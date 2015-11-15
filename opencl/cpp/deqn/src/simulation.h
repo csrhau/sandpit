@@ -20,9 +20,10 @@ class Simulation {
     double _cx;
     double _cy;
     double _initial_temp;
-    std::vector<double> _state;
+    std::vector<float> _state;
     std::vector<cl::Device> _devices;
     cl::Context _context;
+    cl::CommandQueue _queue;
     cl::Kernel _temperature_kernel;
     cl::Kernel _diffusion_kernel;
     cl::Kernel _boundary_kernel;
@@ -49,6 +50,8 @@ class Simulation {
 
     void diffuse();
     void update_boundaries();
+    void syncronize_htod();
+    void syncronize_dtoh();
 };
 
 #endif
