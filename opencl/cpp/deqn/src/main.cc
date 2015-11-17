@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
   std::chrono::steady_clock::time_point t_start = std::chrono::steady_clock::now();
   for (int ts = 0; ts < timesteps; ++ts) {
     sim.advance();
-    std::cout << "Timestep " << ts << " temperature: " << sim.temperature() 
+    std::cout << "Timestep " << ts << " temperature: " << sim.temp() 
               << std::endl;
   }
   std::chrono::steady_clock::time_point t_end = std::chrono::steady_clock::now();

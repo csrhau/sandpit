@@ -86,7 +86,8 @@ namespace Kernels {
       ceil(static_cast<double>(global[0]) / static_cast<double>(local[0]))
      );
     size_t outsize = out_els * sizeof(cl_float);
-    cl::Buffer output = cl::Buffer(_context, CL_MEM_WRITE_ONLY, outsize); cl::Kernel kernel = cl::Kernel(program_, "vecsum_accadd");
+    cl::Buffer output = cl::Buffer(_context, CL_MEM_WRITE_ONLY, outsize);
+    cl::Kernel kernel = cl::Kernel(program_, "vecsum_accadd");
     kernel.setArg(0, input_);
     kernel.setArg(1, output);
     kernel.setArg(2, sizeof(cl_float) * local[0], NULL);

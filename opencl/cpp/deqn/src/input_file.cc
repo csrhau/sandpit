@@ -1,31 +1,17 @@
 #include "input_file.h"
 
 #include <string>
+#include <vector>
 #include <exception>
 
-#include "hdf5.h"
-#include "hdf5_hl.h"
+#include "H5Cpp.h"
 
-
-InputFile::InputFile(std::string filename_) : _filename(filename_) {
-  if ((_file_id = H5Fopen(_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT)) < 0) {
-    throw std::invalid_argument(std::string("Unable to open file ") + filename_);
-  }
-  if (H5LTget_dataset_info(_file_id, DEQN_DATASET, _dims, NULL, NULL) < 0) {
-    H5Fclose(_file_id);
-    throw std::logic_error("unable to read dataset info");
-  } 
-  if (H5LTget_attribute_double(_file_id, "/domain/", "width", &_width) < 0 
-   || H5LTget_attribute_double(_file_id, "/domain/", "depth", &_depth) < 0 
-   || H5LTget_attribute_double(_file_id, "/properties/", "nu", &_nu) < 0 
-   || H5LTget_attribute_double(_file_id, "/properties/", "sigma", &_sigma) < 0) {
-    H5Fclose(_file_id);
-    throw std::logic_error("unable to read dataset attribute");
-  }
-}
-
-InputFile::~InputFile() {
-  H5Fclose(_file_id);
+InputFile::InputFile(std::string filename_) : _file(filename_, H5F_ACC_RDONLY) {
+  _dataset = _file.openDataSet(DEQN_DATASET);
+  _dataspace = _dataset.getSpace();
+  if (_dataspace.getSimpleExtentDims(_dims) != NDIMS) {
+    throw std::logic_error("Data size mismatch!");
+  };
 }
 
 int InputFile::get_rows() const {
@@ -52,16 +38,8 @@ double InputFile::get_sigma() const {
   return _sigma;
 }
 
-void InputFile::populate_data(double *data) const {
-  if (H5LTread_dataset_double(_file_id, DEQN_DATASET, data) < 0) {
-    H5Fclose(_file_id);
-    throw std::logic_error("unable to read dataset");
-  }
-}
-
-void InputFile::populate_data(float *data) const {
-  if (H5LTread_dataset_float(_file_id, DEQN_DATASET, data) < 0) {
-    H5Fclose(_file_id);
-    throw std::logic_error("unable to read dataset");
-  }
+std::vector<double> InputFile::get_data() const {
+  std::vector<double> state(get_rows() * get_cols());
+  _dataset.read(state.data(), H5::PredType::NATIVE_FLOAT);
+  return state;
 }

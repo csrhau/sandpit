@@ -20,15 +20,20 @@ class Simulation {
     double _cx;
     double _cy;
     double _initial_temp;
-    std::vector<float> _state;
+    std::vector<double> _state;
     std::vector<cl::Device> _devices;
     cl::Context _context;
     cl::CommandQueue _queue;
-    cl::Kernel _temperature_kernel;
-    cl::Kernel _diffusion_kernel;
+    cl::Program _program;
+    std::string _build_opts;
     cl::Kernel _boundary_kernel;
-    cl::Buffer _u0;
-    cl::Buffer _u1;
+    cl::Kernel _diffusion_kernel;
+    cl::Kernel _temp_kernel;
+    cl::NDRange _temp_local;
+    cl::NDRange _temp_global;
+    cl::Buffer _u0; // State tNow
+    cl::Buffer _u1; // State tNext
+    cl::Buffer _ut; // Intermediate temps
 
   public:
     Simulation(const InputFile& infile_, const cl::Device& device_);
@@ -37,21 +42,21 @@ class Simulation {
     Simulation& operator=(Simulation const&) = delete;
  
     void advance();
-    double temperature() const;
+    double temp() const;
     int get_rows() const;
     int get_cols() const;
     
-
   private:
     int get_xmin() const;
     int get_xmax() const;
     int get_ymin() const;
     int get_ymax() const;
+    double get_initial_temp() const;
 
-    void diffuse();
-    void update_boundaries();
-    void syncronize_htod();
-    void syncronize_dtoh();
+    void diffuse(); 
+    void update_boundaries(); 
+    void synchronize_htod(); 
+    void syncronize_dtoh(); 
 };
 
 #endif
