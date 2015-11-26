@@ -37,8 +37,6 @@ int main(int argc, char *argv[]) {
 
   parse("whatever");
 
-
-
   return EXIT_SUCCESS;
 }
 
