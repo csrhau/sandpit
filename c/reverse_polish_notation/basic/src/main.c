@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,6 +36,7 @@ double opPlus(double lhs, double rhs) { return lhs + rhs; }
 double opMinus(double lhs, double rhs) { return lhs - rhs; }
 double opTimes(double lhs, double rhs) { return lhs * rhs; }
 double opDivide(double lhs, double rhs) { return lhs / rhs; }
+double opPower(double lhs, double rhs) { return pow(lhs, rhs); }
 
 typedef double (*operator) (double lhs, double rhs);
 operator getOperator(char *op) {
@@ -43,12 +45,12 @@ operator getOperator(char *op) {
     case '-': return opMinus; 
     case '*': return opTimes; 
     case '/': return opDivide; 
+    case '^': return opPower;
     default: {
       return NULL;
     }
   }
 }
-
 
 int main(void) {
   int stack_top = 0;

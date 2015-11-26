@@ -11,6 +11,7 @@ OBJS := $(SRCS:$(SRCDIR)/%.c=$(BINDIR)/%.o)
 CC := gcc
 LD := gcc
 CCFLAGS := -g -Wall -Wextra -ansi -O0 -g  -std=c99
+LDFLAGS := -lm
 
 # Utility functions:
 define maketargetdir
