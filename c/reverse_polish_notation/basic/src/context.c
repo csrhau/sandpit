@@ -29,12 +29,8 @@ void storeVariable(struct Context *context, char * name, double value) {
       printf("Storage of %s requires enlargement \n", name);
       // context is full! We must enlarge it
       int new_capacity = context->capacity * 2;
-      struct Variable *new_lookup = (struct Variable *) malloc(new_capacity * sizeof(struct Variable));
-      memcpy(new_lookup, context->lookup_table, context->capacity * sizeof(struct Variable));
-      // Swap old storage area for new enarged one
-      free(context->lookup_table);
+      context->lookup_table = realloc(context->lookup_table, new_capacity * sizeof(struct Variable));
       context->capacity = new_capacity;
-      context->lookup_table = new_lookup;
     }
     // Guaranteed to have enough space, populate new variable
     strcpy(context->lookup_table[context->size].name, name);
