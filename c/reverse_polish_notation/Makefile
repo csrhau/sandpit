@@ -10,7 +10,7 @@ OBJS := $(SRCS:$(SRCDIR)/%.c=$(BINDIR)/%.o)
 # Compiler Flags:
 CC := gcc
 LD := gcc
-CCFLAGS := -g -Wall -Wextra -ansi -O0 -g  -std=c99
+CCFLAGS := -g -Wall -Wextra -O0 -g  -std=gnu99
 LDFLAGS := -lm
 
 # Utility functions:
@@ -23,7 +23,7 @@ all : $(BINARY)
 $(BINARY) : $(OBJS)
 	@echo linking $@
 	$(maketargetdir)
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) -o $@ $^ $(LDFLAGS)
 
 $(BINDIR)/%.o : $(SRCDIR)/%.c
 	@echo compiling $<
