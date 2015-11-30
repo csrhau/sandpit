@@ -47,12 +47,11 @@ enum token_type typeOf(char *input, struct Context * ctx) {
   return INVALID;
 }
 
-double interpret(struct Context * ctx, char* _line) {
+double interpret(struct Context * ctx, char* line_) {
   int stack_top = 0;
   double stack[MAX_TERMS];
-  char *line = (char *) malloc(strlen(_line) * sizeof(char));
-  strcpy(line, _line);
   // Tokenize Program
+  char *line = strdup(line_);
   char *pptr = strtok(line, " ");
   int finished = 0;
   while (pptr != NULL && !finished) {
@@ -99,10 +98,12 @@ double interpret(struct Context * ctx, char* _line) {
       case INVALID: // Fall through
       default:
         fprintf(stderr, "Invalid token: '%s'. Terminating!\n", pptr);
+        free(line);
         exit(EXIT_FAILURE);
     }
     pptr = strtok(NULL, " ");
   }
+  free(line);
   return stack[0];
 }
 
@@ -140,5 +141,6 @@ int main(int argc, char *argv[]) {
   // Cleanup
   free(line);
   freeContext(ctx);
+  fclose(input_file);
   return EXIT_SUCCESS;
 }
