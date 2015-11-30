@@ -106,26 +106,49 @@ double interpret(struct Context * ctx, char* _line) {
   return stack[0];
 }
 
-int main(void) {
-  char *program[] = {
-    "1 1 + ;two",  // 1 + 1 = 2
-    "two two + ;four // A rather narly string",  // 
-    "four two ^ ;big",
-  };
+size_t readLines(FILE *input, char **buffer) {
+  rewind(input);
+  char *line = NULL;
+  size_t len;
+  ssize_t read;
+  size_t lines = 0;
+  while ((read = getline(&line, &len, input)) != -1) {
+    if (buffer) {
+      buffer[lines] = strdup(line);
+    }
+    ++lines;
+  }
+  if (line) {
+    free(line);
+  }
+  return lines;
+}
 
-  struct Context * ctx = createContext();
-  for (int line = 0; line < 3; ++line) {
-    printf("'%s' evaluates to %f \n", program[line], interpret(ctx, program[line]));
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+  FILE *input_file = fopen(argv[1], "r");
+  if (!input_file) {
+    fprintf(stderr, "Unable to open file %s!\n", argv[1]);
+    return EXIT_FAILURE;
   }
 
-  storeVariable(ctx, "alpha", 42);
-  storeVariable(ctx, "bravo", 12);
-  storeVariable(ctx, "gamma", 12);
-  storeVariable(ctx, "delta", 12);
-  printf("The value of alpha is %f\n", readVariable(ctx, "alpha"));
-  printf("The value of two is %f\n", readVariable(ctx, "two"));
+  // Count number of lines in file
+  size_t lines = readLines(input_file, NULL);
+  char **text = (char **) malloc(lines * sizeof (char*));
+  readLines(input_file, text);
 
+  // Process lines
+  struct Context * ctx = createContext();
+  for (size_t line = 0; line < lines; ++line) {
+    printf("%f // %s", interpret(ctx, text[line]), text[line]);
+    free(text[line]);
+  }
+
+  // Cleanup
+  free(text);
   freeContext(ctx);
-
   return EXIT_SUCCESS;
 }

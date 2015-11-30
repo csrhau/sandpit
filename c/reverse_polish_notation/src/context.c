@@ -1,6 +1,5 @@
 #include "context.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -24,9 +23,7 @@ void storeVariable(struct Context *context, char * name, double value) {
       }
     }
   } else {
-    printf("Storing new variable %s\n", name);
     if (context->size == context->capacity) {
-      printf("Storage of %s requires enlargement \n", name);
       // context is full! We must enlarge it
       int new_capacity = context->capacity * 2;
       context->lookup_table = realloc(context->lookup_table, new_capacity * sizeof(struct Variable));
@@ -53,9 +50,7 @@ double readVariable(struct Context *context, char *name) {
   for (int i = 0; i < context->size; ++i) {
     if (strcmp(context->lookup_table[i].name, name) == 0) {
       return context->lookup_table[i].value;
-    } else {
-      printf("Decided %s is not %s\n", name, context->lookup_table[i].name);
-    }
+    } 
   }
   // Fails silently
   return 0.0;

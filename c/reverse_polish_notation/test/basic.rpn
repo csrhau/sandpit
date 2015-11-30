@@ -1,0 +1,4 @@
+1 2 + 3 + ;six_a
+6 1 * 0 + ;six_b
+12 2 / ;six_c
+six_a six_b +
