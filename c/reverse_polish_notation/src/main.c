@@ -47,12 +47,11 @@ enum token_type typeOf(char *input, struct Context * ctx) {
   return INVALID;
 }
 
-double interpret(struct Context * ctx, char* _line) {
+double interpret(struct Context * ctx, char* line_) {
   int stack_top = 0;
   double stack[MAX_TERMS];
-  char *line = (char *) malloc(strlen(_line) * sizeof(char));
-  strcpy(line, _line);
   // Tokenize Program
+  char *line = strdup(line_);
   char *pptr = strtok(line, " ");
   int finished = 0;
   while (pptr != NULL && !finished) {
@@ -99,10 +98,12 @@ double interpret(struct Context * ctx, char* _line) {
       case INVALID: // Fall through
       default:
         fprintf(stderr, "Invalid token: '%s'. Terminating!\n", pptr);
+        free(line);
         exit(EXIT_FAILURE);
     }
     pptr = strtok(NULL, " ");
   }
+  free(line);
   return stack[0];
 }
 
@@ -114,6 +115,11 @@ size_t readLines(FILE *input, char **buffer) {
   size_t lines = 0;
   while ((read = getline(&line, &len, input)) != -1) {
     if (buffer) {
+      // Strip newlines
+      char *pos;
+      if ((pos = strchr(line, '\n')) != NULL) {
+        *pos = '\0';
+      }
       buffer[lines] = strdup(line);
     }
     ++lines;
@@ -143,12 +149,13 @@ int main(int argc, char *argv[]) {
   // Process lines
   struct Context * ctx = createContext();
   for (size_t line = 0; line < lines; ++line) {
-    printf("%f // %s", interpret(ctx, text[line]), text[line]);
+    printf("%f // %s\n", interpret(ctx, text[line]), text[line]);
     free(text[line]);
   }
 
   // Cleanup
   free(text);
   freeContext(ctx);
+  fclose(input_file);
   return EXIT_SUCCESS;
 }
