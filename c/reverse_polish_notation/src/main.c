@@ -106,49 +106,39 @@ double interpret(struct Context * ctx, char* _line) {
   return stack[0];
 }
 
-size_t readLines(FILE *input, char **buffer) {
-  rewind(input);
-  char *line = NULL;
+int main(int argc, char *argv[]) {
+  // Use stdin as input if no filename given
+  FILE *input_file = stdin;
+  // Use a single file if one argument is given
+  if (argc == 2) {
+    input_file = fopen(argv[1], "r");
+    if (!input_file) {
+      fprintf(stderr, "Unable to open file %s!\n", argv[1]);
+      return EXIT_FAILURE;
+    }
+  }
+  // 
+  if (argc > 2) {
+    fprintf(stderr, "Usage: %s [filename]\nToo many arguments!", argv[0]);
+    return EXIT_FAILURE;
+  }
+
   size_t len;
   ssize_t read;
-  size_t lines = 0;
-  while ((read = getline(&line, &len, input)) != -1) {
-    if (buffer) {
-      buffer[lines] = strdup(line);
-    }
-    ++lines;
-  }
-  if (line) {
-    free(line);
-  }
-  return lines;
-}
-
-int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
-    return EXIT_FAILURE;
-  }
-  FILE *input_file = fopen(argv[1], "r");
-  if (!input_file) {
-    fprintf(stderr, "Unable to open file %s!\n", argv[1]);
-    return EXIT_FAILURE;
-  }
-
-  // Count number of lines in file
-  size_t lines = readLines(input_file, NULL);
-  char **text = (char **) malloc(lines * sizeof (char*));
-  readLines(input_file, text);
-
-  // Process lines
+  char *line = NULL;
   struct Context * ctx = createContext();
-  for (size_t line = 0; line < lines; ++line) {
-    printf("%f // %s", interpret(ctx, text[line]), text[line]);
-    free(text[line]);
+  while ((read = getline(&line, &len, input_file)) != -1) {
+    // Remove trailing newline
+    char *pos;
+    if ((pos = strchr(line, '\n')) != NULL) {
+        *pos = '\0';
+    }
+    char *line_copy = strdup(line);
+    printf("%f // %s\n", interpret(ctx, line_copy), line);
+    free(line_copy);
   }
-
   // Cleanup
-  free(text);
+  free(line);
   freeContext(ctx);
   return EXIT_SUCCESS;
 }
