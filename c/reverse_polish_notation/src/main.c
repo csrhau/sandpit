@@ -32,13 +32,13 @@ enum token_type typeOf(char *input, struct Context * ctx) {
   if (isNumeric(input)) {
     return VALUE;
   }
-  if (strlen(input) == 1) {
+  if (strlen(input) == 1 && strstr("+-*/^", input)) {
     return OPERATOR;
   }
   if (strcmp(input, "//") == 0) {
     return COMMENT;
   }
-  if (strlen(input) > 1 && input[0] == ';' && input[1] != ';') {
+  if (strlen(input) > 1 && input[0] == ':' && input[1] != ':') {
     return ASSIGNMENT;
   }
   if (containsVariable(ctx, input)){
