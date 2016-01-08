@@ -1,0 +1,19 @@
+# Heatmap Generator
+# Arguments: inputfile outputfile
+# Usage: gnuplot -e "inputfile='data/trademap.csv' outputfile='output/trademap.png'" heatmap.gpl
+# Data Format:
+# ,a,b,c,d
+#x,0,10,20,5
+#y,30,40,50,5
+#z,60,70,80,5
+
+
+set title "Buyer Preferences"
+set datafile separator ','
+set ylabel "Traders"
+set xlabel "Stocks"
+XTICS=system("head -n 1 " . inputfile . " | cut -f 2- -d, | tr , ' '")
+YTICS=system("cut -f 1 -d, " . inputfile . " | sed 1d | tr '\n' ' '")
+set for [i=1:words(YTICS)] ytics ( word(YTICS,i) i-1 )
+set for [i=1:words(XTICS)] xtics ( word(XTICS,i) i-1 ) rotate
+plot '<sed 1d ' . inputfile . ' | cut -f 2- -d,' matrix with image

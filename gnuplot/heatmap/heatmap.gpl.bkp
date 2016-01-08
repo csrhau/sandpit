@@ -1,0 +1,10 @@
+set title "Buyer Preferences"
+
+set ylabel "Traders"
+set xlabel "Stocks"
+set size 1, 0.5
+YTICS="A B C"
+XTICS="D E F"
+set for [i=1:words(YTICS)] ytics ( word(YTICS,i) i-1 )
+set for [i=1:words(XTICS)] xtics ( word(XTICS,i) i-1 )
+plot 'source.dat' matrix every 1:2 with image

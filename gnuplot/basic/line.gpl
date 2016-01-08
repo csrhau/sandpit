@@ -1,0 +1,7 @@
+#
+# Simple line plot from data
+#
+
+set title "Demo of simple linear data"
+plot 'sample.csv' using 0:1 every ::1 with lines 
+

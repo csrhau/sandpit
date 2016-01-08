@@ -19,14 +19,17 @@ def process_arguments():
 def main():
   # Process Arguments
   args = process_arguments()
-  print('done')
   in_img = Image.open(args.infile).load()
   a = in_img[args.row, args.col]
 
+  match_found = False
   for candidate in args.candidates:
     c_img = Image.open(candidate).load()
     if a == c_img[args.row, args.col]:
       print ("{} Matches!".format(candidate.name))
+      match_found = True
+  if not match_found:
+    print('No Match!')
 
   args.infile.close()
   for candidate in args.candidates:

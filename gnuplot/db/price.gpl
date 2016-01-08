@@ -1,0 +1,22 @@
+#A line plot for stock files
+# Arguments: inputfile outputfile
+# Usage: gnuplot -e "inputfile='data/vodafone.csv' outputfile='output/vodafone.png'" price.gpl
+
+# Header format
+# time,buyer,seller,price,size,currency,symbol,sector,bid,ask,state
+set datafile separator ","
+set timefmt '%Y-%m-%d %H:%M:%S +0000'
+set xdata time
+set format x "%H:%M"
+set xlabel "Time"
+set ylabel "Price (GBX)"
+
+
+
+set terminal png size 640, 280
+set output outputfile
+
+
+plot inputfile using 0:9 every ::1 with lines title "Bid",\
+     inputfile using 0:10 every ::1 with lines title "Ask",\
+     inputfile using 0:4 every ::1 with points title "Trades"
