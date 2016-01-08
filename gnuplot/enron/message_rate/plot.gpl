@@ -1,0 +1,12 @@
+set title "Enron Communication Rates"
+set datafile separator ","
+set timefmt "%Y-%m-%d
+set xdata time
+set autoscale xfix
+
+set ylabel "Weekly Messages"
+set xlabel "Week Commencing"
+
+set xtics format "%b %Y"
+
+plot inputfile using 1:2
