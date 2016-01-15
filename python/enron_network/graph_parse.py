@@ -16,7 +16,7 @@ Message = namedtuple('Message', ['sender', 'recipients', 'timestamp'])
 def process_arguments():
     """ Process command line arguments """
     parser = argparse.ArgumentParser(description="Enron Corpus Parser")
-    parser.add_argument("-w", "--whitelist", help='path to e-mail whitelist',
+    parser.add_argument("-a", "--addressbook", help='path to e-mail addressbook',
                         type=argparse.FileType('r'), required=True)
     parser.add_argument("-o", "--output", help='path to output file',
                         type=argparse.FileType('w'), required=True)
@@ -28,7 +28,7 @@ def process_arguments():
                         action="store_true")
     return parser.parse_args()
 
-def extract_messages(path, whitelist, outboxes, verbose):
+def extract_messages(path, addressbook, outboxes, verbose):
     """ Extracts e-mails from the Enron corpus """
     # Set ensures messages are unique
     messages = set()
@@ -46,7 +46,7 @@ def extract_messages(path, whitelist, outboxes, verbose):
                 message = parser.parsestr(message_file.read())
                 # Resolve senders and recipients
                 sender = message['From']
-                if sender not in whitelist:
+                if sender not in addressbook:
                     continue
                 recipients = []
                 if message['To'] is not None:
@@ -55,8 +55,8 @@ def extract_messages(path, whitelist, outboxes, verbose):
                     recipients += [m.strip(',') for m in message['Cc'].split()]
                 if message['Bcc'] is not None:
                     recipients += [m.strip(',') for m in message['Bcc'].split()]
-                # Only include recipients in whitelist
-                wl_recipients = tuple(r for r in recipients if r in whitelist)
+                # Only include recipients in addressbook
+                wl_recipients = tuple(addressbook[r] for r in recipients if r in addressbook)
                 if len(wl_recipients) == 0:
                     continue
                 messages.add(Message(sender, wl_recipients, dateutil.parser.parse(message['Date'])))
@@ -72,10 +72,11 @@ def save_messages(messages, outfile):
 def main():
     """ Applicaion entry point """
     args = process_arguments()
-    whitelist = set(json.load(args.whitelist))
-    args.whitelist.close()
+    addressbook = {email: name for name, emails in json.load(args.addressbook).items()\
+                               for email in emails}
+    args.addressbook.close()
 
-    messages = extract_messages(args.path, whitelist, args.sent, args.verbose)
+    messages = extract_messages(args.path, addressbook, args.sent, args.verbose)
     save_messages(messages, args.output)
 
 if __name__ == '__main__':
