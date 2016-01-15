@@ -10,11 +10,14 @@
 
 set title "Comms patterns"
 set datafile separator ','
+
+set logscale cb
+set xtics format "" 
+set ytics format "" 
+
+set title 'Communication Matrix'
 set ylabel "To"
 set xlabel "From"
-
-set xtics format " " 
-set ytics format " " 
 
 plot '<sed 1d ' . inputfile . ' | cut -f 2- -d,' matrix with image
 
