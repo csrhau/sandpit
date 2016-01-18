@@ -1,0 +1,32 @@
+\documentclass[a4paper]{article}
+\usepackage{standalone}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+\pgfplotsset{compat=newest}
+
+\title{Enron Metrics}
+\author{Stephen Roberts}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+  This document describes several basic communication patterns found in the Enron dataset.
+  Students should be able to reproduce at least some of these results using their software.
+\end{abstract}
+
+\section{Message Rates}
+The events of the Enron scandal clearly impacted the rates at which e-mails were sent within the firm.
+Students were asked to plot message rates for both the whole firm and individual users. 
+
+\begin{figure}
+\centering
+\input{plots/rates}
+\caption{Enron Corpus Message Rates}
+\label{fig:technique}
+\end{figure}
+
+
+
+
+\end{document}
