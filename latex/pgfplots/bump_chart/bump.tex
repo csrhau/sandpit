@@ -1,0 +1,35 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\usepackage{mathpazo}
+\usepgfplotslibrary{dateplot}
+
+% abbreviated month names as tick labels in PGFPlots
+% http://tex.stackexchange.com/questions/20445/abbreviated-month-names-as-tick-labels-in-pgfplots
+
+% see this: http://tex.stackexchange.com/questions/216197/plotting-time-series-data for interesting things.
+
+% This: would greatly improve stuffs http://tex.stackexchange.com/questions/235039/start-xtick-labels-in-the-first-interval-using-pgfplots
+\begin{document}
+
+\pgfplotstableread[col sep = comma]{rank.csv}\rankings
+
+\begin{tikzpicture}
+  \begin{axis}[title=Bump Chart,
+               xlabel=Date,
+               ylabel=Rank,
+               clip=false, % allows labels beyond xmax
+               enlarge x limits = false, % prevent whitespace after plot
+               xticklabel style={/pgf/number format/1000 sep=}, % shows years as 2000, rather than 2,000
+               y dir=reverse,
+               no marks,
+               ytick={1,...,10}]
+
+    \addplot table[x=year, y index = {1}]{\rankings} node[right=0.1cm, pos=1] {Tom};
+    \addplot table[x=year, y index = {2}]{\rankings} node[right=0.1cm, pos=1] {Dick};
+    \addplot[color=lightgray] table[x=year, y index = {3}]{\rankings};
+    \addplot table[x=year, y index = {4}]{\rankings} node[right=0.1cm, pos=1] {Bernard};
+    \addplot[color=lightgray] table[x=year, y index = {5}]{\rankings};
+    \addplot[color=lightgray] table[x=year, y index = {6}]{\rankings};
+      \end{axis}
+\end{tikzpicture}
+\end{document}
