@@ -33,10 +33,9 @@ def process(args)
   options = Parser.parse args.empty? ? %w[--help] : args
   jsfile = File.read(options.datafile)
   weeks = Hash.new { |h, k| h[k] = 0 }
-  cutoff = DateTime.parse('1990-01-01T00:00:00-00:00')
   JSON.parse(jsfile).each do |message| 
     date = DateTime.parse(message['timestamp']).to_date
-    weeks[week_start(date)] += 1 if date > cutoff
+    weeks[week_start(date)] += 1
   end
 
   File.open(options.outfile, 'w') do |outfile|

@@ -4,7 +4,6 @@
 
 import argparse
 import json
-import code
 import operator
 import pygraphviz as pgv
 import networkx as nx

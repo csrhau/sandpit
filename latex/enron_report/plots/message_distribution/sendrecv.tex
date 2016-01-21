@@ -1,0 +1,28 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable} 
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\pgfplotstableread[col sep = comma]{message_rates.csv}\unsorted
+\pgfplotstablesort[sort key={Total}, sort cmp=float >]{\messagerates}{\unsorted} 
+
+\begin{tikzpicture}
+  \begin{axis}[xlabel={Employee}, 
+               ylabel={Messages},
+               ymin=0,
+               enlarge x limits=false]
+
+      \addplot[blue, mark=none, name path=sent] table[x expr=\coordindex, y=Sent]{\messagerates};
+      \addplot[red, mark=none, name path=total] table[x expr=\coordindex, y=Total]{\messagerates};
+      \path[name path=origin] (\pgfkeysvalueof{/pgfplots/xmin},0) --  (\pgfkeysvalueof{/pgfplots/xmax},0);
+      \addplot [blue, fill opacity=0.1] fill between[of=origin and sent];
+      \addplot [red, fill opacity=0.1] fill between[of=sent and total];
+  \end{axis}
+
+
+
+\end{tikzpicture}
+\end{document}

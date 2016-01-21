@@ -2,6 +2,9 @@
 \usepackage{standalone}
 
 \usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{textcomp}    % for \texttextlangle and \texttextrangle macros
+
 \usepgfplotslibrary{dateplot}
 \pgfplotsset{compat=newest}
 
@@ -21,11 +24,36 @@ Students were asked to plot message rates for both the whole firm and individual
 
 \begin{figure}
 \centering
-\input{plots/rates}
+\input{plots/message_rates/rates}
 \caption{Enron Corpus Message Rates}
 \label{fig:technique}
 \end{figure}
 
+
+
+\section{Alias Detection}
+Many Enron employees had multiple e-mail addresses, both professional and personal.
+There are several approaches to detecting aliases in the data. 
+These range from simple fuzzy-matching of e-mail addresses to advanced techniques like authorship identification via text mining or node similarity metrics based on graph structure.
+The aliases given in AUTOREF were generated with the former simplistic approach. 
+
+
+\begin{tabular}{ll}
+\toprule
+Employee & Aliases \\
+\midrule
+Jeff Dasovich & jdasovic@enron.com \\
+James Derrick Jr. & jr..legal@enron.com \\
+Vince J Kaminski & kaminski@enron.com, vkaminski@aol.com \\
+John J Lavorato &  lavorato@enron.com \\
+Ken Lay & chairman.ken@enron.com, klay@enron.com \\
+Albert Meyers & bert.meyers@enron.com \\
+Mark E Taylor & legal \textlangle.taylor@enron.com\textrangle \\
+Kim S Ward & houston \textlangle.ward@enron.com\textrangle \\
+Jason Williams & trading \textlangle.williams@enron.com\textrangle \\
+Bill Williams III & bill.iii@enron.com \\
+\bottomrule 
+\end{tabular}
 
 
 
