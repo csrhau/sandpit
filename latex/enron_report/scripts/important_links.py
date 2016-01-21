@@ -10,6 +10,7 @@ import itertools
 import pandas as pd
 import numpy as np
 from collections import Counter, defaultdict
+import timeit
 
 def process_arguments():
     """ Process command line arguments """
@@ -40,15 +41,13 @@ def main():
         counts[message['sender']].update(message['recipients'])
     for person in people:
         counts[person][person]=0
-    df = pd.DataFrame(counts).fillna(0)
-    for person in people:
-      print(df[person][person])
-    pairwise = (df * df.T).stack().rank(method='dense', ascending=False)
-
-
-    pairwise.index.names=['sender', 'recipient']
-    pairwise.name = 'count'
-    print(pairwise)
+    df = pd.DataFrame(counts)
+    connections = (df * df.T).stack().to_frame()
+    connections.index.names=['sender', 'recipient']
+    subset = connections.loc[connections.index.get_level_values('sender') < connections.index.get_level_values('recipient')]
+    subset.columns = ['count']
+    print(subset)
+    subset.rank(method='first', ascending=False).sort_values(by='count').to_csv(args.outfile)
 
     args.infile.close()
     args.outfile.close()
