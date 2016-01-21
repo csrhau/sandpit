@@ -17,7 +17,6 @@ def process_arguments():
                       help='Path to data file to process')
     parser.add_argument('-o', '--outfile', type=argparse.FileType('w'), required=True,
                       help='Path to output data to')
-    parser.add_argument('-r', '--records', default=10, help='Number of employees to output', type=int)
     return parser.parse_args()
 
 def load_data(infile):
