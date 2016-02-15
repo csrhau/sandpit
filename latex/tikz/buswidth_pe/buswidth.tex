@@ -1,0 +1,69 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{decorations.markings} % for bus width symbol
+
+\begin{document}
+  \tikzstyle{sq} = [minimum height=0.8cm, minimum width=0.8cm]
+  \tikzstyle{pe} = [rectangle, sq, draw=black]
+  \tikzset{>=latex} % Change default arrowhead to filled triangle
+
+  % \pelem[label]
+  \def\pelem[#1] {
+    \node (#1) [pe] {PE}; 
+  }
+
+  % \blank[label]
+  \def\blank[#1] {
+    \node (#1) [sq] {}; 
+  }
+
+  \begin{tikzpicture}[]
+    \matrix[row sep=.5cm, column sep=.5cm] {
+      \blank[A0] & \blank[B0] & \blank[C0] \\ 
+      \blank[A1] & \pelem[B1] & \blank[C1] \\ 
+      \blank[A2] & \blank[B2] & \blank[C2] \\ 
+    };
+
+    \begin{scope}[decoration = {
+                    markings,
+                    mark= at position 0.4 with {
+                      \draw[-, blue] (2pt, 2pt) -- (-2pt, -2pt) ;
+                    }
+                  }]
+      \draw [->, postaction=decorate] (A1) -- (B1);
+      \draw [->, postaction=decorate] (B1) -- (C1);
+      \draw [->, postaction=decorate] (A1) -- (B1);
+    \end{scope}
+
+    \begin{scope}[decoration = {
+                    markings,
+                    mark= at position 0.4 with {
+                      \draw[-, red] (2pt, -2pt) -- (-2pt, 2pt) ;
+                    }
+                  }]
+      \draw [->, postaction=decorate] (B0) -- (B1);
+      \draw [->, postaction=decorate] (B1) -- (B2);
+    \end{scope}
+
+    \begin{scope}[decoration = {
+                    markings,
+                    mark= at position 0.4 with {
+                      \draw[-, green] (1pt, -3pt) -- (-1pt, 3pt) ;
+                    }
+                  }]
+      \draw [->, postaction=decorate] (A0) -- (B1);
+      \draw [->, postaction=decorate] (B1) -- (C2);
+    \end{scope}
+
+
+
+
+
+
+
+
+
+
+
+
+  \end{tikzpicture}
+\end{document}
