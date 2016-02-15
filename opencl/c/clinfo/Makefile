@@ -56,3 +56,4 @@ $(PROJ): clinfo.c
 
 clean:
 	rm $(PROJ)
+	rm -rf clinfo.x.dSYM
