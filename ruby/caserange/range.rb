@@ -9,7 +9,7 @@ class Parser
   def self.parse(args)
     options = Options.new
     OptionParser.new do |opts|
-      opts.banner = "Usage: range..rb [options]"
+      opts.banner = "Usage: nodesummary [options]"
       opts.on('-n', '--node [NODENAME]', 'Node Name') do |n|
         options.node = n
       end
@@ -22,8 +22,6 @@ class Parser
     options
   end
 end
-
-
 
 def taurus(number)
   case number
@@ -48,10 +46,9 @@ def taurus(number)
   end
 end
 
-
 options = Parser.parse(ARGV)
-if options.node =~ /itaurus([\d]+)/
-  spec = taurus($1)
+if options.node =~ /taurusi([\d]+)/
+  spec = taurus($1.to_i)
   if spec.processor != "Unknown"
     puts "#{options.node}: #{spec.cores} core #{spec.processor} processor, #{spec.memory}MB RAM\n"
   else 
