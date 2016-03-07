@@ -1,0 +1,123 @@
+{
+  "suite": "Euler-Experiments",
+  "directory": "~/Projects/proxy-power/benchmarks/rodinia/src",
+  "repeats": 5,
+  "experiments" : [
+    {
+     "binary": "euler3d_cpu_double.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+      "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted.b",
+      "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted_soa.b",
+     "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_scratch.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_tiling.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_scratch_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_float_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted_padding.b",
+     "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_float_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted_padding_novectorflux.b",
+     "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted_padding.b",
+     "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_fusion_neighbourfission_align_sorted_padding_flip.b",
+     "input": "../input/fvcorr.domn.097K.sorted"
+    },
+    {
+     "binary": "euler3d_cpu_double_prefetch.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_float.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_float_sqrt.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_float_sse.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_float_flip.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "pre_euler3d_cpu_float.b",
+     "input": "../input/fvcorr.domn.097K"
+    },
+    {
+     "binary": "euler3d_cpu_double_div_swap_reducedcompute_restrict_neighbourfission.b",
+     "input": "../input/fvcorr.domn.097K"
+    }
+  ]
+}
