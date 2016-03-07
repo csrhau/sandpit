@@ -16,13 +16,15 @@ do
 module load scorep/sync-2015-07-24-intel-xmpi-cuda6.5
 module load hdeem
 
+CSVNAME="${SUITE}-Binary-${BIN##*/}-Input-${INPUT##*/}-Array-\${SLURM_ARRAY_TASK_ID}-Of-${REPEATS}.csv"
+
 cd $DIR
 export OMP_NUM_THREADS=1
 clearHdeem
 startHdeem
 ./${BIN##*/} ${INPUT}
 stopHdeem
-printHdeem -o $FILENAME.csv
+printHdeem -o $CSVNAME.csv
 clearHdeem
 
 PBSHERE
