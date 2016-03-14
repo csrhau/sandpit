@@ -3,13 +3,14 @@
 
 \usepackage{pgfplots}
 \usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
 \usepackage{textcomp}    % for \texttextlangle and \texttextrangle macros
 
 \usepgfplotslibrary{dateplot}
 \pgfplotsset{compat=newest}
 
 \title{Enron Metrics}
-\author{Stephen Roberts}
 
 \begin{document}
 \maketitle
@@ -18,9 +19,81 @@
   Students should be able to reproduce at least some of these results using their software.
 \end{abstract}
 
-\section{Message Rates}
+\section{Enron E-Mail Dataset}
+The first task in this coursework was to read in and parse the Enron e-mail corpus. 
+Students were provided with a basic parsing script, with the expectation that they would adapt it as necessary.
+
+\subsection{Data Quality}
+The Enron E-Mail corpus is a real-world dataset complete with data quality issues, including:
+\begin{itemize}
+  \item \textbf{Duplicates:} identical messages appear multiple times;
+  \item \textbf{Encoding:} files are are encoded with the Latin-1 character set;
+  \item \textbf{Inconsistent Structure:} there is no standard mailbox structure;
+  \item \textbf{Aliases:} employees can have multiple e-mail addresses;
+  \item \textbf{Partial Data:} the 'To' field is missing from many messages; and 
+  \item \textbf{Incomplete Data:} only a subset of Enron employees are represented.
+\end{itemize}
+
+\subsection{E-mail aliases}
+\label{sub:dummy}
+\begin{table}
+  \centering
+  \begin{tabular}{ll}
+  \toprule
+  Employee & Aliases \\
+  \midrule
+  Jeff Dasovich & jdasovic@enron.com \\
+  James Derrick Jr. & jr..legal@enron.com \\
+  Vince J Kaminski & kaminski@enron.com, vkaminski@aol.com \\
+  John J Lavorato &  lavorato@enron.com \\
+  Ken Lay & chairman.ken@enron.com, klay@enron.com \\
+  Albert Meyers & bert.meyers@enron.com \\
+  Mark E Taylor & legal \textlangle.taylor@enron.com\textrangle \\
+  Kim S Ward & houston \textlangle.ward@enron.com\textrangle \\
+  Jason Williams & trading \textlangle.williams@enron.com\textrangle \\
+  Bill Williams III & bill.iii@enron.com \\
+  \bottomrule 
+  \end{tabular}
+  \caption{E-mail aliases}
+  \label{tab:aliases}
+\end{table}
+
+
+One particularly severe data quality issue is the problem of aliases; many e-mail addresses can map to a single employee.
+There are several approaches to detecting these aliases in the data. 
+Techniques range from simple fuzzy-matching of e-mail addresses to advanced techniques like authorship identification via text mining or node similarity metrics.
+The aliases given in \autoref{tab:aliases} were generated with the former, more simplistic approach. 
+
+\section{Message Rate Analysis}
 The events of the Enron scandal clearly impacted the rates at which e-mails were sent within the firm.
 Students were asked to plot message rates for both the whole firm and individual users. 
+
+\begin{table}
+  \centering
+  \begin{tabular}{ll}
+  \toprule
+  Week Starting & Significant Events \\
+  \midrule
+  Aug 2000 & Enron shares reach high of \$90 \\
+  Dec 2000 & Jeff Skilling succeeds Ken Lay as CEO \\
+  13 Aug 01 & Skilling Resigns; Lay returns as CEO \\
+  22 Aug 01 & Sherron Watkins warns Lay of financial irregularities \\
+  15 Oct 01 & Enron announces \$638 millin in Q3 losses \\
+  22 Oct 01 & SEC launches an inquiry into Enron's finances \\
+  29 Oct 01 & SEC inquiry becomes a formal investigation \\
+  05 Nov 01 & Dynergy announces Enron aquisition bid \\
+  26 Nov 01 & Dynergy retracts its bid, Enron files for bankruptcy \\
+  03 Dec 01 & Enron announces 4,000 redundancies \\
+  10 Dec 01 & Enron formally accused of violating securities law \\
+  31 Dec 01 & Rumours of a possible DoJ criminal investigation surface \\
+  07 Jan 02 & DoJ announces criminal investigation \\
+            & Auditors Arthur Andersen admit shredding evidence \\
+  14 Jan 02 & D.B. Duncan fired from Arthur Andersen \\
+  21 Jan 02 & Former CEO of Enron North America commits suicide \\
+  \bottomrule
+  \end{tabular}
+  \caption{Enron Scandal Timeline}
+\end{table}
 
 \begin{figure}
 \centering
@@ -28,33 +101,6 @@ Students were asked to plot message rates for both the whole firm and individual
 \caption{Enron Corpus Message Rates}
 \label{fig:technique}
 \end{figure}
-
-
-
-\section{Alias Detection}
-Many Enron employees had multiple e-mail addresses, both professional and personal.
-There are several approaches to detecting aliases in the data. 
-These range from simple fuzzy-matching of e-mail addresses to advanced techniques like authorship identification via text mining or node similarity metrics based on graph structure.
-The aliases given in AUTOREF were generated with the former simplistic approach. 
-
-
-\begin{tabular}{ll}
-\toprule
-Employee & Aliases \\
-\midrule
-Jeff Dasovich & jdasovic@enron.com \\
-James Derrick Jr. & jr..legal@enron.com \\
-Vince J Kaminski & kaminski@enron.com, vkaminski@aol.com \\
-John J Lavorato &  lavorato@enron.com \\
-Ken Lay & chairman.ken@enron.com, klay@enron.com \\
-Albert Meyers & bert.meyers@enron.com \\
-Mark E Taylor & legal \textlangle.taylor@enron.com\textrangle \\
-Kim S Ward & houston \textlangle.ward@enron.com\textrangle \\
-Jason Williams & trading \textlangle.williams@enron.com\textrangle \\
-Bill Williams III & bill.iii@enron.com \\
-\bottomrule 
-\end{tabular}
-
 
 
 \end{document}
