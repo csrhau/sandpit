@@ -1,9 +1,12 @@
 all: test_rom.gtw
 
-rom.o: rom.vhdl
+memory_types.o: memory_types.vhdl
 	ghdl -a $<
 
-test_rom.o: test_rom.vhdl rom.o
+rom.o: rom.vhdl memory_types.o
+	ghdl -a $<
+
+test_rom.o: test_rom.vhdl rom.o memory_types.o
 	ghdl -a $<
 
 test_rom: test_rom.o
