@@ -34,5 +34,4 @@ begin
     wait;
   end process;
 
-
 end behavioural;
