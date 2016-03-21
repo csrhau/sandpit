@@ -50,12 +50,6 @@ def main():
 
   display(field)
 
-
-
-
-  
-
-
   print("Hello, world!")
 
 
