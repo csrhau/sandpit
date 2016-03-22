@@ -30,19 +30,17 @@ architecture behavioural of vga_sync is
   signal h_count : integer range H_LINE_END downto 0 := 0;
   signal v_count : integer range V_LINE_END downto 0 := 0;
 
+  signal pixel : std_logic_vector(7 downto 0) := "00000000";
+
 begin
 
   process(clock)
   begin
     if rising_edge(clock) then
       if h_count < display_cols and v_count < display_rows then
-        red <= display_color(7 downto 5);
-        green <= display_color(4 downto 2);
-        blue <= display_color(1 downto 0);
+        pixel <= display_color;
       else
-        red <= "000";
-        green <= "000";
-        blue <= "00";
+        pixel <= "00000000";
       end if;
 
       if h_count >= H_PULSE_START and h_count < H_PULSE_END then
@@ -57,7 +55,6 @@ begin
         vsync <= '1';
       end if;
 
-
       -- UPDATE COUNTERS
       if h_count = H_LINE_END then
         h_count <= 0;
@@ -71,5 +68,9 @@ begin
       end if;
     end if;
   end process;
+
+  red <= pixel(7 downto 5);
+  green <= pixel(4 downto 2);
+  blue <= pixel(1 downto 0);
 
 end behavioural;
