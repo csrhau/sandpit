@@ -19,9 +19,6 @@ end vga_sync;
 
 architecture behavioural of vga_sync is
 
-  constant COLOR : std_logic_vector(7 downto 0) := "10101010";
-
-
   constant H_PULSE_START : integer := display_cols + 16; -- front porch is 16 columns
   constant H_PULSE_END: integer := H_PULSE_START + 96; -- Pulse is 96 columns
   constant H_LINE_END: integer := H_PULSE_END + 48 - 1; -- back porch is 48 columns 
@@ -39,15 +36,14 @@ begin
   begin
     if rising_edge(clock) then
       if h_count < display_cols and v_count < display_rows then
-        red <= COLOR(7 downto 5);
-        green <= COLOR(4 downto 2);
-        blue <= COLOR(1 downto 0);
+        red <= display_color(7 downto 5);
+        green <= display_color(4 downto 2);
+        blue <= display_color(1 downto 0);
       else
         red <= "000";
         green <= "000";
         blue <= "00";
       end if;
-
 
       if h_count >= H_PULSE_START and h_count < H_PULSE_END then
         hsync <= '0';
@@ -75,7 +71,5 @@ begin
       end if;
     end if;
   end process;
-
-
 
 end behavioural;
