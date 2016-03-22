@@ -14,5 +14,5 @@ test_read_funcs: test_read_funcs.o
 
 
 clean: 
-	rm -f *.o *.cf *.gtw
+	rm -f *.o *.cf *.ghw
 	rm -rf ./test_read_funcs

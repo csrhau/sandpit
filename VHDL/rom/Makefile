@@ -1,4 +1,4 @@
-all: test_rom.gtw
+all: test_rom.ghw
 
 memory_types.o: memory_types.vhdl
 	ghdl -a $<
@@ -12,9 +12,9 @@ test_rom.o: test_rom.vhdl rom.o memory_types.o
 test_rom: test_rom.o
 	ghdl -m $@
 
-test_rom.gtw: test_rom
+test_rom.ghw: test_rom
 	./$< --wave=$@
 
 clean: 
-	rm -f *.o *.cf *.gtw
+	rm -f *.o *.cf *.ghw
 	rm -rf ./test_rom
