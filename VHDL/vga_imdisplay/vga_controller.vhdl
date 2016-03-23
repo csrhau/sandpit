@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity vga_sync is
   generic (
-    display_rows : integer := 640;
-    display_cols : integer := 480;
+    display_rows : integer := 480;
+    display_cols : integer := 640;
     display_color : std_logic_vector(7 downto 0) := "11111111"
   );
   port (
@@ -37,35 +37,37 @@ begin
 
   process(clock)
   begin
-    if rising_edge(clock) and clock_enable = '1' then
-      if h_count < display_cols and v_count < display_rows then
-        pixel <= display_color;
-      else
-        pixel <= "00000000";
-      end if;
-
-      if h_count >= H_PULSE_START and h_count < H_PULSE_END then
-        hsync <= '0';
-      else
-        hsync <= '1';
-      end if;
-
-      if v_count >= V_PULSE_START and v_count < V_PULSE_END then
-        vsync <= '0';
-      else
-        vsync <= '1';
-      end if;
-
-      -- UPDATE COUNTERS
-      if h_count = H_LINE_END then
-        h_count <= 0;
-        if v_count = V_LINE_END then
-          v_count <= 0;
+    if rising_edge(clock) then
+      if clock_enable = '1' then
+        if h_count < display_cols and v_count < display_rows then
+          pixel <= display_color;
         else
-          v_count <= v_count + 1;
+          pixel <= "00000000";
         end if;
-      else -- not at a row/col border
-        h_count <= h_count + 1;
+
+        if h_count >= H_PULSE_START and h_count < H_PULSE_END then
+          hsync <= '0';
+        else
+          hsync <= '1';
+        end if;
+
+        if v_count >= V_PULSE_START and v_count < V_PULSE_END then
+          vsync <= '0';
+        else
+          vsync <= '1';
+        end if;
+
+        -- UPDATE COUNTERS
+        if h_count = H_LINE_END then
+          h_count <= 0;
+          if v_count = V_LINE_END then
+            v_count <= 0;
+          else
+            v_count <= v_count + 1;
+          end if;
+        else -- not at a row/col border
+          h_count <= h_count + 1;
+        end if;
       end if;
     end if;
   end process;
