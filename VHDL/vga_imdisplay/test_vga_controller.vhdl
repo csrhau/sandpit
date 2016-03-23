@@ -13,6 +13,7 @@ architecture behavioural  of test_vga_controller is
     );
     port (
       clock : in std_logic;
+      clock_enable : in std_logic;
       hsync : out std_logic;
       vsync : out std_logic;
       red : out STD_LOGIC_VECTOR (2 downto 0);
@@ -29,6 +30,7 @@ architecture behavioural  of test_vga_controller is
 begin
   VGA_OUTPUT: vga_sync generic map(6, 4, "00011100")
                        port map (clock,
+                                 '1', -- Clock enable.
                                  hsync,
                                  vsync,
                                  pixel(7 downto 5),

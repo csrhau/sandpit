@@ -9,6 +9,7 @@ entity vga_sync is
   );
   port (
     clock : in std_logic;
+    clock_enable : in std_logic;
     hsync : out std_logic := '0';
     vsync : out std_logic := '0';
     red : out STD_LOGIC_VECTOR (2 downto 0);
@@ -36,7 +37,7 @@ begin
 
   process(clock)
   begin
-    if rising_edge(clock) then
+    if rising_edge(clock) and clock_enable = '1' then
       if h_count < display_cols and v_count < display_rows then
         pixel <= display_color;
       else
