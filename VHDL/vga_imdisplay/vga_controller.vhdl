@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.memory_types.all;
 
 entity vga_controller is
   generic (
@@ -12,7 +13,7 @@ entity vga_controller is
     pixel_in : in std_logic_vector(7 downto 0);
     read_req : out std_logic := '0';
     -- TODO make this out natural range vga_memory'range;
-    read_address : out std_logic_vector(18 downto 0) := (others => '0'); -- Large enough to hold 524288 addresses, which is sufficient for the 307200 standard resolution
+    read_address : out natural range vga_memory'range;
     hsync : out std_logic := '0';
     vsync : out std_logic := '0';
     pixel_out : out std_logic_vector(7 downto 0) := (others => '0')
@@ -45,10 +46,10 @@ begin
         when SRead =>
           if h_count < display_cols and v_count < display_rows then
             s_read_req <= '1';
-            read_address <= std_logic_vector(to_unsigned(v_count * display_cols + h_count, 19));
+            read_address <= v_count * display_cols + h_count;
           else
             s_read_req <= '0';
-            read_address <= (others => '0');
+            read_address <= 0;
           end if;
           state <= SUpdate;
         when SUpdate =>

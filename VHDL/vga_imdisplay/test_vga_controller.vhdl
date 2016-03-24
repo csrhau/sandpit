@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.memory_types.all;
+use std.textio.all;
 
 
 entity test_vga_controller is
@@ -16,7 +18,7 @@ architecture behavioural of test_vga_controller is
       clock : in std_logic; -- 100 MHz Clock
       pixel_in : in std_logic_vector(7 downto 0); -- Color returned from memory
       read_req : out std_logic := '0';
-      read_address : out std_logic_vector(18 downto 0); -- Large enough to hold 640x480
+      read_address : out natural range vga_memory'range;
       hsync : out std_logic := '0';
       vsync : out std_logic := '0';
       pixel_out : out std_logic_vector(7 downto 0)
@@ -27,8 +29,9 @@ architecture behavioural of test_vga_controller is
 
   signal clock, read_req, hsync, vsync : std_logic;
   signal pixel_in : std_logic_vector(7 downto 0);
-  signal read_address: std_logic_vector(18 downto 0);
+  signal read_address: natural range vga_memory'range;
   signal pixel_out  : std_logic_vector(7 downto 0);
+
 
 begin
   CONTROLLER: vga_controller generic map (display_rows => 4,
@@ -39,7 +42,8 @@ begin
                                        hsync, vsync,
                                        pixel_out);
   process
-    variable read_step : integer := 0;
+    variable read_step : natural range vga_memory'range := 0;
+    variable oline: line;
   begin
 
     clock <= '0';
@@ -48,8 +52,10 @@ begin
     wait for 1 ns;
     assert read_req = '1'
       report "Read state should requeste a read" severity error;
-    assert read_address = std_logic_vector(to_unsigned(read_step, 19))
+
+    assert read_address = read_step
       report "Read should have specified an address" severity error;
+
     read_step := 1;
     clock <= '0';
     wait for 1 ns;

@@ -1,4 +1,4 @@
-all: test_vga_rom.ghw test_vga_controller.ghw test_init_funcs.ghw
+all: test_vga_rom.ghw test_vga_controller.ghw test_init_funcs.ghw test_vga_system.ghw
 
 memory_types.o: memory_types.vhdl
 	ghdl -a $<
@@ -15,7 +15,6 @@ test_vga_rom: test_vga_rom.o
 test_vga_rom.ghw: test_vga_rom
 	./$< --wave=$@
 
-
 init_funcs.o: init_funcs.vhdl memory_types.o
 	ghdl -a $<
 
@@ -28,7 +27,7 @@ test_init_funcs: test_init_funcs.o
 test_init_funcs.ghw: test_init_funcs
 	./$< --wave=$@
 
-vga_controller.o: vga_controller.vhdl 
+vga_controller.o: vga_controller.vhdl  memory_types.o
 	ghdl -a $<
 
 test_vga_controller.o: test_vga_controller.vhdl vga_controller.o 
@@ -41,6 +40,17 @@ test_vga_controller.ghw: test_vga_controller
 	./$< --wave=$@
 
 
+vga_system.o: vga_system.vhdl memory_types.o vga_controller.o vga_rom.o init_funcs.o
+	ghdl -a $<
+
+test_vga_system.o: test_vga_system.vhdl vga_system.o
+	ghdl -a $<
+
+test_vga_system: test_vga_system.o
+	ghdl -m $@
+
+test_vga_system.ghw: test_vga_system
+	./$< --wave=$@
 
 clean: 
 	rm -f *.o *.cf *.ghw *.vcd
