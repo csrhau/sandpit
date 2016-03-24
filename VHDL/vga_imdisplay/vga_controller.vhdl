@@ -14,7 +14,7 @@ entity vga_controller is
     read_addr : out std_logic_vector(18 downto 0) := (others => '0'); -- Large enough to hold 524288 addresses, which is sufficient for the 307200 standard resolution
     hsync : out std_logic := '0';
     vsync : out std_logic := '0';
-    pixel_out : out std_logic_vector(7 downto 0)
+    pixel_out : out std_logic_vector(7 downto 0) := (others => '0')
  );
 end vga_controller;
 
