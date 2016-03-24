@@ -1,4 +1,4 @@
-all: test_array.ghw test_slv.ghw test_records.ghw
+all: test_array.ghw test_typecasts.ghw test_slv.ghw test_records.ghw
 
 test_array.o: test_array.vhdl
 	ghdl -a $<
@@ -18,6 +18,19 @@ test_slv: test_slv.o
 test_slv.ghw: test_slv
 	./$< --wave=$@
 
+
+test_typecasts.o: test_typecasts.vhdl
+	ghdl -a $<
+
+test_typecasts: test_typecasts.o
+	ghdl -m $@
+
+test_typecasts.ghw: test_typecasts
+	./$< --wave=$@
+
+
+
+
 test_records.o: test_records.vhdl
 	ghdl -a $<
 
@@ -32,4 +45,5 @@ clean:
 	rm -f *.o *.cf *.ghw
 	rm -rf ./test_array
 	rm -rf ./test_slv
+	rm -rf ./test_typecasts
 	rm -rf ./test_records
