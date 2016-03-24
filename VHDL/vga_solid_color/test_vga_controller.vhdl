@@ -28,7 +28,7 @@ architecture behavioural  of test_vga_controller is
   signal pixel  : std_logic_vector(7 downto 0);
 
 begin
-  VGA_OUTPUT: vga_sync generic map(6, 4, "00011100")
+  VGA_OUTPUT: vga_sync generic map(4, 6, "00011100")
                        port map (clock,
                                  '1', -- Clock enable.
                                  hsync,
