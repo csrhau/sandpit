@@ -11,7 +11,8 @@ entity vga_controller is
     clock : in std_logic; -- 100 MHz Clock
     pixel_in : in std_logic_vector(7 downto 0);
     read_req : out std_logic := '0';
-    read_addr : out std_logic_vector(18 downto 0) := (others => '0'); -- Large enough to hold 524288 addresses, which is sufficient for the 307200 standard resolution
+    -- TODO make this out natural range vga_memory'range;
+    read_address : out std_logic_vector(18 downto 0) := (others => '0'); -- Large enough to hold 524288 addresses, which is sufficient for the 307200 standard resolution
     hsync : out std_logic := '0';
     vsync : out std_logic := '0';
     pixel_out : out std_logic_vector(7 downto 0) := (others => '0')
@@ -44,10 +45,10 @@ begin
         when SRead =>
           if h_count < display_cols and v_count < display_rows then
             s_read_req <= '1';
-            read_addr <= std_logic_vector(to_unsigned(v_count * display_cols + h_count, 19));
+            read_address <= std_logic_vector(to_unsigned(v_count * display_cols + h_count, 19));
           else
             s_read_req <= '0';
-            read_addr <= (others => '0');
+            read_address <= (others => '0');
           end if;
           state <= SUpdate;
         when SUpdate =>

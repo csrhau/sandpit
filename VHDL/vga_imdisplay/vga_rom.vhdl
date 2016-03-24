@@ -9,7 +9,7 @@ entity VGA_ROM is
   );
   port (
     clock : in std_logic;
-    address : in natural range contents'range;
+    address : in natural range vga_memory'range;
     data : out std_logic_vector(7 downto 0)
   );
 end entity VGA_ROM;

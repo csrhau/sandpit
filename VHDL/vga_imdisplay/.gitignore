@@ -1,1 +1,3 @@
 test_vga_controller
+test_vga_rom
+test_init_funcs
