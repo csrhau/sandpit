@@ -12,12 +12,14 @@ architecture behavioural  of test_vga_rom is
     );
     port (
       clock : in std_logic;
+      enable : in std_logic;
       address : in natural range vga_memory'range;
       data : out std_logic_vector(7 downto 0)
     );
   end component;
 
   signal clock  : std_logic;
+  signal enable  : std_logic;
   signal address : natural range vga_memory'range;
   signal output : std_logic_vector(7 downto 0);
 
@@ -44,10 +46,11 @@ architecture behavioural  of test_vga_rom is
 
 begin
   ROMCELL : VGA_ROM generic map (test_storage)
-                    port map (clock, address, output);
+                    port map (clock, enable, address, output);
   process
   begin
 
+    enable <= '1';
     address <= 0;
     clock <= '0';
     wait for 1 ns;
@@ -72,6 +75,16 @@ begin
     assert output = "00000000"
         report "result should be zero" severity error;
    
+    enable <= '0';
+    address <= 1;
+    clock <= '0';
+    wait for 1 ns;
+    clock <= '1';
+    wait for 1 ns;
+    assert output = "00000000"
+      report "result should be 0 when disabled" severity error;
+
+
     wait;
   end process;
 

@@ -1,4 +1,4 @@
-all: test_vga_rom.ghw test_vga_controller.ghw test_init_funcs.ghw test_vga_system.ghw
+all: test_vga_rom.ghw test_vga_sequencer.ghw test_init_funcs.ghw test_vga_system.ghw
 
 memory_types.o: memory_types.vhdl
 	ghdl -a $<
@@ -27,20 +27,20 @@ test_init_funcs: test_init_funcs.o
 test_init_funcs.ghw: test_init_funcs
 	./$< --wave=$@
 
-vga_controller.o: vga_controller.vhdl  memory_types.o
+vga_sequencer.o: vga_sequencer.vhdl  memory_types.o
 	ghdl -a $<
 
-test_vga_controller.o: test_vga_controller.vhdl vga_controller.o 
+test_vga_sequencer.o: test_vga_sequencer.vhdl vga_sequencer.o 
 	ghdl -a $<
 
-test_vga_controller: test_vga_controller.o
+test_vga_sequencer: test_vga_sequencer.o
 	ghdl -m $@
 
-test_vga_controller.ghw: test_vga_controller
+test_vga_sequencer.ghw: test_vga_sequencer
 	./$< --wave=$@
 
 
-vga_system.o: vga_system.vhdl memory_types.o vga_controller.o vga_rom.o init_funcs.o
+vga_system.o: vga_system.vhdl memory_types.o vga_sequencer.o vga_rom.o init_funcs.o
 	ghdl -a $<
 
 test_vga_system.o: test_vga_system.vhdl vga_system.o
@@ -56,4 +56,4 @@ clean:
 	rm -f *.o *.cf *.ghw *.vcd
 	rm -rf ./test_vga_rom
 	rm -rf ./test_init_funcs
-	rm -rf ./test_vga_controller
+	rm -rf ./test_vga_sequencer

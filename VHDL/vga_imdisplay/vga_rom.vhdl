@@ -9,6 +9,7 @@ entity VGA_ROM is
   );
   port (
     clock : in std_logic;
+    enable : in std_logic;
     address : in natural range vga_memory'range;
     data : out std_logic_vector(7 downto 0)
   );
@@ -21,7 +22,11 @@ architecture behavioural of VGA_ROM is
   process(clock)
   begin
     if rising_edge(clock) then
+      if enable = '1' then
         data <= storage(address);
+      else
+        data <= (others => '0');
+      end if;
     end if;
   end process;
 end behavioural;

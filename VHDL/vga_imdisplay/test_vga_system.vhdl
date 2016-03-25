@@ -12,23 +12,29 @@ architecture behavioural of test_vga_system is
     );
     port (
       clock : in std_logic; -- 100 MHz Clock
-      hsync : out std_logic := '0';
-      vsync : out std_logic := '0';
-      pixel_out : out std_logic_vector(7 downto 0) := (others => '0')
+      hsync : out std_logic;
+      vsync : out std_logic;
+      red : out std_logic_vector(2 downto 0);
+      green : out std_logic_vector(2 downto 0);
+      blue : out std_logic_vector(2 downto 1)
    );
   end component VGA_system;
 
   signal clock : std_logic;
   signal hsync : std_logic;
   signal vsync : std_logic;
-  signal pixel_out: std_logic_vector(7 downto 0);
+  signal red : std_logic_vector(2 downto 0);
+  signal green : std_logic_vector(2 downto 0);
+  signal blue : std_logic_vector(2 downto 1);
 
 begin
   SYSTEM: VGA_system port map (
                        clock,
                        hsync,
                        vsync,
-                       pixel_out
+                       red,
+                       green,
+                       blue
                      );
 
   process
