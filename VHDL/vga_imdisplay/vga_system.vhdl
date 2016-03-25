@@ -44,9 +44,9 @@ architecture structural of vga_system is
     );
   end component vga_controller;
 
-  signal address_s : natural range vga_memory'range;
+  signal address_s : natural range vga_memory'range := 0;
   signal pixel_data_s : std_logic_vector(7 downto 0);
-  signal read_req_s : std_logic := '0';
+  signal read_req_s : std_logic;
 
 begin
 

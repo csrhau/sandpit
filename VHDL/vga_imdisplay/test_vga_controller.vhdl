@@ -48,6 +48,22 @@ begin
 
     clock <= '0';
     wait for 1 ns;
+    clock <= '1'; -- Delay1 -> Delay2
+    wait for 1 ns;
+    assert read_req = '0'
+      report "Delay state should not request a read" severity error;
+
+    clock <= '0';
+    wait for 1 ns;
+    clock <= '1'; -- Delay2 -> Read
+    wait for 1 ns;
+    assert read_req = '0'
+      report "Delay state should not request a read" severity error;
+
+
+
+    clock <= '0';
+    wait for 1 ns;
     clock <= '1'; -- Read -> Update
     wait for 1 ns;
     assert read_req = '1'

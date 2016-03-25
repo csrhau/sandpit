@@ -13,7 +13,7 @@ entity vga_controller is
     pixel_in : in std_logic_vector(7 downto 0);
     read_req : out std_logic := '0';
     -- TODO make this out natural range vga_memory'range;
-    read_address : out natural range vga_memory'range;
+    read_address : out natural range vga_memory'range := 0;
     hsync : out std_logic := '0';
     vsync : out std_logic := '0';
     pixel_out : out std_logic_vector(7 downto 0) := (others => '0')
@@ -22,7 +22,7 @@ end vga_controller;
 
 architecture behavioural of vga_controller is
   type sync_state is (SRead, SUpdate, SDelay1, SDelay2);
-  signal state : sync_state := SRead;
+  signal state : sync_state := SDelay1; -- Give the system time to get ready
 
   constant H_PULSE_START : natural := display_cols + 16; -- front porch is 16 columns
   constant H_PULSE_END: natural := H_PULSE_START + 96; -- Pulse is 96 columns
