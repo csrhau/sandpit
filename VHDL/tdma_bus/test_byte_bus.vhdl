@@ -32,25 +32,36 @@ begin
     wait for 1 ns;
     clock <= '1';
     wait for 1 ns;
-    assert data_bus = "11110000"
-      report "Data should match 11110000" severity error;
+    assert data_bus = "00000000"
+      report "Data should match writer position" severity error;
 
     clock <= '0';
     wait for 1 ns;
     clock <= '1';
     wait for 1 ns;
-    assert data_bus = "11110000"
-      report "Data should match 11110000" severity error;
+    assert data_bus = "00000001"
+      report "Data should match writer position" severity error;
 
     clock <= '0';
     wait for 1 ns;
     clock <= '1';
     wait for 1 ns;
-    assert data_bus = "11110000"
-      report "Data should match 11110000" severity error;
+    assert data_bus = "00000010"
+      report "Data should match writer position" severity error;
 
+    clock <= '0';
+    wait for 1 ns;
+    clock <= '1';
+    wait for 1 ns;
+    assert data_bus = "00000011"
+      report "Data should match writer position" severity error;
 
-
+    clock <= '0';
+    wait for 1 ns;
+    clock <= '1';
+    wait for 1 ns;
+    assert data_bus = "00000000"
+      report "Writer should cycle back to start" severity error;
 
     wait;
   end process;

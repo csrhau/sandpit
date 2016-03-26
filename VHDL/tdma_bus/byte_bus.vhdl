@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity byte_bus is 
   generic (
@@ -30,7 +31,7 @@ begin
     element: bus_writer generic map (
                           bus_length,
                           bus_index, 
-                          "11110000" 
+                          std_logic_vector(to_unsigned(bus_index, 8))
                         ) port map (
                           clock,
                           data
