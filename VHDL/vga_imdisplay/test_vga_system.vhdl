@@ -1,5 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use work.init_funcs.all;
+use std.textio.all;
 
 entity test_vga_system is
 end test_vga_system;
@@ -27,6 +29,7 @@ architecture behavioural of test_vga_system is
   signal green : std_logic_vector(2 downto 0);
   signal blue : std_logic_vector(2 downto 1);
 
+  
 begin
   SYSTEM: VGA_system port map (
                        clock,
@@ -38,12 +41,58 @@ begin
                      );
 
   process
+    variable vsync_holder : std_logic;
+    variable hsync_holder : std_logic;
+    variable log_line, data_line : line;
+    file file_pointer: text is out "vga_log.txt";
+
   begin
-    for i in 1 to 500000 loop
+    for i in 1 to 2000000 loop
+      vsync_holder := vsync;
       clock <= '0';
-      wait for 1 ns;
+      wait for 5 ns;
       clock <= '1'; -- Delay2 -> Read
-      wait for 1 ns;
+      wait for 5 ns;
+      clock <= '0';
+      wait for 5 ns;
+      clock <= '1'; -- Read -> Update
+      wait for 5 ns;
+       clock <= '0';
+      wait for 5 ns;
+      clock <= '1'; -- Update -> Delay1
+      wait for 5 ns;
+ 
+      write(data_line, now); -- write the line.
+      write(data_line, ':'); -- write the line.
+
+      -- Write the hsync
+      write(data_line, ' ');
+      write(data_line, chr(hsync)); -- write the line.
+
+      -- Write the vsync
+      write(data_line, ' ');
+      write(data_line, chr(vsync)); -- write the line.
+
+      -- Write the red
+      write(data_line, ' ');
+      write(data_line, str(red)); -- write the line.
+
+      -- Write the green
+      write(data_line, ' ');
+      write(data_line, str(green)); -- write the line.
+
+      -- Write the blue
+      write(data_line, ' ');
+      write(data_line, str(blue)); -- write the line.
+
+      writeline(file_pointer, data_line); -- write the contents into the file.
+
+
+      clock <= '0';
+      wait for 5 ns;
+      clock <= '1'; -- Delay1 -> Delay2
+      wait for 5 ns;
+ 
     end loop;
     wait;
   end process;

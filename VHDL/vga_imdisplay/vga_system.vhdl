@@ -72,8 +72,9 @@ begin
                             );
 
   -- Split color channels
-  red <= pixel_out(7 downto 5);
-  green <= pixel_out(4 downto 2);
-  blue <= pixel_out(1 downto 0);
+  --- | R | G | B | R | G | B | R | G 
+  red <= pixel_out(7) & pixel_out(4) & pixel_out(1);
+  green <= pixel_out(6) & pixel_out(3) & pixel_out(0);
+  blue <= pixel_out(5) & pixel_out(2);
 
 end structural;
