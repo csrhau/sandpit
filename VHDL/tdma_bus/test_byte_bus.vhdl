@@ -23,8 +23,6 @@ architecture behavioural of test_byte_bus is
 begin
   BBUS: byte_bus generic map(4)
                  port map (clock, data_bus);
-
-
   process
   begin
 
