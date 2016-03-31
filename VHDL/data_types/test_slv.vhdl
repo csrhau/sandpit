@@ -18,6 +18,10 @@ architecture behavioural of test_slv is
     return result;
   end function popcnt;
 
+
+  signal test_offsets_1 : std_logic_vector (7 downto 0) := "11110000";
+  signal test_offsets_2 : std_logic_vector (8 downto 1);
+
 begin
 
   process
@@ -40,6 +44,12 @@ begin
     assert result = 5
       report "Result should be 5 for 111110" severity error;
 
+
+
+    test_offsets_2 <= test_offsets_1;
+    wait for 1 ns;
+    assert test_offsets_2 = "11110000"
+      report "can mix and match non-zero offsets" severity error;
 
     wait;
   end process;
