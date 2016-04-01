@@ -1,4 +1,4 @@
-all: test_gol_ram.ghw test_gol_processor.ghw test_glu.ghw
+all: test_sequencer.ghw 
 
 gol_processor.o: gol_processor.vhdl
 	ghdl -a $<
@@ -36,6 +36,19 @@ test_glu: test_glu.o
 test_glu.ghw: test_glu
 	./$< --wave=$@
 
+sequencer.o: sequencer.vhdl
+	ghdl -a $<
+
+test_sequencer.o: test_sequencer.vhdl sequencer.o
+	ghdl -a $<
+
+test_sequencer: test_sequencer.o
+	ghdl -m $@
+
+test_sequencer.ghw: test_sequencer
+	./$< --wave=$@
+
+
 
 clean: 
 	rm -f *.o *.cf *.ghw
@@ -43,3 +56,4 @@ clean:
 	rm -rf ./test_gol_fsm
 	rm -rf ./test_gol_ram
 	rm -rf ./test_glu
+	rm -rf ./test_sequencer
