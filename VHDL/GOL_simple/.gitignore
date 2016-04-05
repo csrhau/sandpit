@@ -1,0 +1,4 @@
+*.cf
+*.o
+*.ghw
+test_board
