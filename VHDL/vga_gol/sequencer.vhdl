@@ -10,8 +10,10 @@ entity sequencer is
   );
   port (
     clock        : in std_logic;
-    write_enable : out std_logic := '0';
-    address : out std_logic_vector(addr_bits-1 downto 0)
+    input : in std_logic_vector(9 downto 0);
+    output: out std_logic_vector(8 downto 1);
+    address : out std_logic_vector(addr_bits-1 downto 0);
+    write_enable : out std_logic := '0'
   );
 end entity sequencer;
  

@@ -14,14 +14,38 @@ architecture behavioural of test_array is
   signal state2 : board2;
 
 
+
+
   type kB_ram is array(0 to 1023) of std_logic_vector(7 downto 0);
   signal initializeme : kB_ram := (others => (others => '1')); -- Nested initialization!
+  signal blockinit : kB_ram := (0 => "00000000",
+                                1 => "00000001",
+                                2 to 10 => "01010101",
+                                others => (others => '1'));
+
+
   
 begin
   process
   begin
     assert initializeme(4) = "11111111"
       report "Should have initialized correctly" severity error;
+
+    assert blockinit(0) = "00000000"
+      report "Should have initialized correctly" severity error;
+
+    assert blockinit(1) = "00000001"
+      report "Should have initialized correctly" severity error;
+
+
+    for i in 2 to 10 loop
+      assert blockinit(i) = "01010101"
+        report "Should have initialized correctly" severity error;
+    end loop;
+
+    assert blockinit(100) = "11111111"
+        report "Should have initialized correctly" severity error;
+
 
     wait;
   end process;
