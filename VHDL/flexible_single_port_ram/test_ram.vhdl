@@ -7,14 +7,10 @@ end test_ram;
 architecture behavioural  of test_ram is
 
   component RAM is 
-    generic (
-      words: natural;
-      addr_bits: natural
-    );
     port (
       clock : in std_logic;
       write_enable : in std_logic; 
-      address : in std_logic_vector(addr_bits-1 downto 0);
+      address : in std_logic_vector;
       data_in : in std_logic_vector;
       data_out : out std_logic_vector
     );
@@ -34,8 +30,7 @@ begin
 
   clock <= not clock after period/2 when finished='0';
 
-  ramcell : RAM generic map (words => 1024, addr_bits => 10)
-                port map (clock, write_enable, address, data_in, data_out);
+  ramcell : RAM port map (clock, write_enable, address, data_in, data_out);
   process
   begin
 

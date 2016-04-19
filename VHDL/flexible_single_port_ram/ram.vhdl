@@ -3,21 +3,17 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity RAM is 
-  generic (
-    words: natural;
-    addr_bits: natural
-  );
   port (
     clock : in std_logic;
     write_enable : in std_logic; 
-    address : in std_logic_vector(addr_bits-1 downto 0);
+    address : in std_logic_vector;
     data_in : in std_logic_vector;
     data_out : out std_logic_vector
   );
 end entity RAM;
 
 architecture behavioural of RAM is
-  type memory is array(0 to words-1) of std_logic_vector(data_in'range);
+  type memory is array(integer range 0 to (2**address'length)) of std_logic_vector(data_in'range);
   signal storage : memory := (others => (others => '0'));
  begin
 
