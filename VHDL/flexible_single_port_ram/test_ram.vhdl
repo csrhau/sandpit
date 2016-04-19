@@ -22,6 +22,10 @@ architecture behavioural  of test_ram is
   signal data_in  : std_logic_vector(7 downto 0);
   signal data_out : std_logic_vector(7 downto 0);
 
+  -- Just to prove types don't conflict
+  signal address2 : std_logic_vector(5 downto 0);
+  signal data_in2 : std_logic_vector(1 downto 0);
+  signal data_out2 : std_logic_vector(1 downto 0);
 
   signal period: time := 10 ns;
   signal clock : std_logic := '0';
@@ -31,12 +35,15 @@ begin
   clock <= not clock after period/2 when finished='0';
 
   ramcell : RAM port map (clock, write_enable, address, data_in, data_out);
+  ramcell2 : RAM port map (clock, write_enable, address2, data_in2, data_out2);
   process
   begin
 
     address <= "0000000000";
+    address2 <= "000000";
     write_enable <= '1';
     data_in <= "01010101";
+    data_in2 <= "01";
     wait for period;
     assert data_out = "00000000"
       report "RAM should be zero initialized" severity error;
