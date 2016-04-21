@@ -13,7 +13,7 @@ entity RAM is
 end entity RAM;
 
 architecture behavioural of RAM is
-  type memory is array(integer range 0 to (2**address'length)) of std_logic_vector(data_in'range);
+  type memory is array(integer range 0 to (2**address'length-1)) of std_logic_vector(data_in'range);
   signal storage : memory := (others => (others => '0'));
  begin
 
