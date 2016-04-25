@@ -8,10 +8,12 @@ end test_stencil_buffer;
 architecture behavioural of test_stencil_buffer is
 
   component stencil_buffer is
+    generic (
+      addr_bits : natural
+    );
     port (
       clock : in std_logic;
       advance: in std_logic;
-      address: in std_logic_vector;
       input : in std_logic_vector;
       tl : out std_logic_vector;
       tc : out std_logic_vector;
@@ -30,7 +32,6 @@ architecture behavioural of test_stencil_buffer is
   signal finished : std_logic := '0';
 
   signal advance : std_logic := '0';
-  signal address : std_logic_vector (3 downto 0); -- Long enough for a 9 element vector
   signal input : std_logic_vector(7 downto 0);
 
   signal tl : std_logic_vector(7 downto 0);
@@ -46,8 +47,8 @@ architecture behavioural of test_stencil_buffer is
 
 begin
   clock <= not clock after period/2 when finished='0';
-
-  BUFF: stencil_buffer port map (clock, advance, address, input,
+  BUFF: stencil_buffer generic map (addr_bits => 4) -- 16 places; large enough for a 3x3 stencil
+                       port map (clock, advance, input,
                                  tl, tc, tr,
                                  ml, mc, mr,
                                  bl, bc, br);
@@ -105,6 +106,8 @@ begin
     assert bl = "00001001" report "bl should contain the correct value" severity error;
     assert bc = "00001010" report "bc should contain the correct value" severity error;
     assert br = "00001011" report "br should contain the correct value" severity error;
+
+    wait for 30 * period;
 
     finished <= '1';
     wait;

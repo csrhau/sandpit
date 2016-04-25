@@ -8,10 +8,12 @@ use ieee.numeric_std.all;
 -- This file exists to help understand and iron out offsets
 
 entity stencil_buffer is
+  generic (
+    addr_bits : natural
+  );
   port (
     clock : in std_logic;
     advance: in std_logic;
-    address: in std_logic_vector;
     input : in std_logic_vector;
     tl : out std_logic_vector;
     tc : out std_logic_vector;
@@ -47,9 +49,9 @@ architecture behavioural of stencil_buffer is
     return to_integer(unsigned(address) - offset);
   end function offset_addr;
 
-  type neighbourhood_t is array(integer range 0 to (2**address'length-1)) of std_logic_vector(input'range);
+  type neighbourhood_t is array(integer range 0 to (2**addr_bits-1)) of std_logic_vector(input'range);
   signal neighbourhood : neighbourhood_t := (others => (others => '0'));
-  signal head : std_logic_vector(address'range) := (others => '0');
+  signal head : std_logic_vector(addr_bits-1 downto 0) := (others => '0');
 
 begin
   SEQUENTIAL: process(clock) begin
