@@ -1,13 +1,13 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity test_ripple_buffer is 
-end test_ripple_buffer;
+entity test_stencil_buffer is 
+end test_stencil_buffer;
 
 
-architecture behavioural of test_ripple_buffer is
+architecture behavioural of test_stencil_buffer is
 
-  component ripple_buffer is
+  component stencil_buffer is
     port (
       clock : in std_logic;
       advance: in std_logic;
@@ -15,7 +15,7 @@ architecture behavioural of test_ripple_buffer is
       input : in std_logic_vector;
       output : out std_logic_vector
     );
-  end component ripple_buffer;
+  end component stencil_buffer;
 
   signal clock : std_logic := '0';
   signal finished : std_logic := '0';
@@ -28,7 +28,7 @@ architecture behavioural of test_ripple_buffer is
 begin
   clock <= not clock after period/2 when finished='0';
 
-  BUFF: ripple_buffer port map (clock, advance, address, input, output);
+  BUFF: stencil_buffer port map (clock, advance, address, input, output);
 
   process
   begin

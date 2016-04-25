@@ -1,4 +1,4 @@
-all: test_ring_buffer.ghw test_ripple_buffer.ghw
+all: test_ring_buffer.ghw test_stencil_buffer.ghw
 
 ring_buffer.o: ring_buffer.vhdl
 	ghdl -a $<
@@ -12,19 +12,19 @@ test_ring_buffer: test_ring_buffer.o
 test_ring_buffer.ghw: test_ring_buffer
 	./$< --wave=$@
 
-ripple_buffer.o: ripple_buffer.vhdl
+stencil_buffer.o: stencil_buffer.vhdl
 	ghdl -a $<
 
-test_ripple_buffer.o: test_ripple_buffer.vhdl ripple_buffer.o
+test_stencil_buffer.o: test_stencil_buffer.vhdl stencil_buffer.o
 	ghdl -a $<
 
-test_ripple_buffer: test_ripple_buffer.o
+test_stencil_buffer: test_stencil_buffer.o
 	ghdl -m $@
 
-test_ripple_buffer.ghw: test_ripple_buffer
+test_stencil_buffer.ghw: test_stencil_buffer
 	./$< --wave=$@
 
 clean: 
 	rm -f *.o *.cf *.ghw
 	rm -rf ./test_ring_buffer
-	rm -rf ./test_ripple_buffer
+	rm -rf ./test_stencil_buffer
