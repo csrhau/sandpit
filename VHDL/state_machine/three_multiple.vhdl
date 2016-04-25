@@ -46,5 +46,6 @@ begin
     end if;
   end process;
 
+  -- N.B.; PROBABLY BETTER TO SPLIT INTO SEQUENTIAL/COMBINATORIAL PAIR
   state <= state_s;
 end behavioural;
