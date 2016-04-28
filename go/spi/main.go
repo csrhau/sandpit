@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/kidoman/embd"
 	"github.com/kidoman/embd/convertors/mcp3008"
-	"github.com/kidoman/embd/host/generic"
+	_ "github.com/kidoman/embd/host/bbb"
 	"time"
 )
 
