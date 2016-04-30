@@ -10,8 +10,6 @@ architecture behavioural of test_typecasts is
   constant natural_value : natural range 255 downto 0 := 164;
   constant slv_value : std_logic_vector(7 downto 0) := "10100100";
 
-
-
    function chr(sl: std_logic) return character is
     variable c: character;
     begin
