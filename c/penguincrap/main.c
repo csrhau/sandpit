@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 
   // Print header
   fprintf(output_file, "Timestamp,");
-  for (int port = 1; port < 16; ++port) {
+  for (int port = 1; port < 8; ++port) {
     fprintf(output_file, "Ch%d milliamps,Ch%d Millivolts,Ch%d Milliwatts,", port, port, port);
   }
   fprintf(output_file, "\n");
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     usleep(100000); // 1/10th of a second, vaguely, ish
     gettimeofday( &t_now, NULL );
     fprintf(output_file, "%ld.%d,", (long int) (t_now.tv_sec - t_start.tv_sec), (int) t_now.tv_usec); 
-    for (int port = 1; port < 16; ++port) {
+    for (int port = 1; port < 8; ++port) {
       reading_t result = read_port(port);
       fprintf(output_file, "%d,%d,%d,", result.miliamps, result.milivolts, result.miliwatts);
     }
