@@ -1,5 +1,11 @@
 #include "sampling.h"
 
+
+/* getRawPower9.5.c   (version 1)
+ * For use with Carrier Board 10016423 Rev E8 (= Rev A)
+ * Sandia Q195871 configuration 
+ */
+
 #include <stdint.h>
 #include <unistd.h>
 #include <errno.h>
@@ -74,13 +80,6 @@ struct {
         { -1, "/sys/devices/ocp.3/helper.10/AIN6", ainTransfer, openAIN }
     }; ;
 
-typedef struct reading {
-    uint16_t    Asamp;          // Raw sample
-    uint16_t    Vsamp;          // Raw sample
-    int32_t     miliamps;       // Calculated value
-    int32_t     milivolts;      // Calculated value
-    int32_t     miliwatts;      // Calculated value
-} reading_t;
 
 reading_t sample;
 
@@ -374,7 +373,6 @@ void calcValues(int portNumber)
     sample.miliwatts /= 1000;  // convert from E-6 to E-3
 
 }   // end calcValues()
-
 
 reading_t read_channel(int channel_num) {
   reading_t result = {1,2,3,4,5};

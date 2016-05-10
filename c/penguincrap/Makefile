@@ -6,7 +6,7 @@ DEPS = sampling.h
 all: psamp.x
 
 %.o: %.c $(DEPS)
-		$(CC) -c -o $@ $< $(CFLAGS)
+		$(CC) -std=gnu99 -c -o $@ $< $(CFLAGS)
 
 psamp.x: main.o sampling.o
 		gcc -o psamp.x main.o sampling.o

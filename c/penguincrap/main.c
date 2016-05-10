@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <signal.h>
 #include <sys/time.h>
 #include "sampling.h"
 
@@ -86,7 +88,7 @@ int main(int argc, char *argv[]) {
     // hack something shitty, CBA with unix timers.
     usleep(100000); // 1/10th of a second, vaguely, ish
     gettimeofday( &t_now, NULL );
-    fprintf(output_file, "%ld.%d,",t_now.tv_sec - t_start.tv_sec, t_now.tv_usec); 
+    fprintf(output_file, "%ld.%d,", (long int) (t_now.tv_sec - t_start.tv_sec), (int) t_now.tv_usec); 
     for (int port = 1; port < 16; ++port) {
       reading_t result = read_channel(port);
       fprintf(output_file, "%d,%d,%d,", result.miliamps, result.milivolts, result.miliwatts);
