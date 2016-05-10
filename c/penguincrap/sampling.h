@@ -11,6 +11,6 @@ typedef struct reading {
     int32_t     miliwatts;      // Calculated value
 } reading_t;
 
-reading_t read_channel(int channel_num);
+reading_t read_port(int port_number);
 
 #endif

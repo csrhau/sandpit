@@ -362,7 +362,6 @@ void calcValues(int portNumber)
         case 10:
 	    sample.milivolts = SAMPLE_TO_3_3VOLTS(sample.Vsamp);
             break;
-
 // 	    sample.milivolts = SAMPLE_TO_5VOLTS(sample.Vsamp);
 //          break;
 
@@ -371,10 +370,12 @@ void calcValues(int portNumber)
     // calculate miliwatts
     sample.miliwatts = sample.miliamps * sample.milivolts;
     sample.miliwatts /= 1000;  // convert from E-6 to E-3
-
 }   // end calcValues()
 
-reading_t read_channel(int channel_num) {
-  reading_t result = {1,2,3,4,5};
+reading_t read_port(int port_number) {
+  // Collect raw readings
+  getReadings(port_number);
+  calcValues(port_number);
+  reading_t result = sample;
   return result;
 }
